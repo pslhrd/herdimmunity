@@ -53,16 +53,17 @@ export class Camera {
   }
 
   setDebug() {
-    
-    const cameraFolder = this.debug.addFolder({
-      title: 'Camera'
-    })
-    cameraFolder.addInput(this.params, 'Mode', {
-      options: {
-        Default: 'default',
-        Debug: 'debug'
-      }
-    })
+    if (this.config.debug) {
+      const cameraFolder = this.debug.addFolder({
+        title: 'Camera'
+      })
+      cameraFolder.addInput(this.params, 'Mode', {
+        options: {
+          Default: 'default',
+          Debug: 'debug'
+        }
+      })
+    }
   }
 
   resize() {
