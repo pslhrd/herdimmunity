@@ -4,7 +4,6 @@ import { store } from '~/store'
 
 export class Renderer {
   constructor(_options) {
-    console.log(_options)
     this.app = new App()
     this.scene = this.app.scene
     this.camera = this.app.camera
@@ -33,7 +32,7 @@ export class Renderer {
   }
 
   update() {
-    this.instance.render(this.scene, this.camera.instance)
+    this.instance.render(this.scene, this.camera.currentCamera)
   }
 
   resize() {

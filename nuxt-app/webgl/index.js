@@ -3,6 +3,8 @@ import { store } from '~/store'
 import { Camera } from '~/webgl/Camera'
 import { Renderer } from '~/webgl/Renderer'
 import { World } from '~/webgl/World'
+import Stats from '~/webgl/utils/Stats.js'
+import { Resources } from '~/webgl/Resources'
 import { watch } from 'vue'
 import * as THREE from 'three'
 
@@ -26,8 +28,10 @@ export class App {
     this.setConfig()
     this.setDebug()
     this.setScene()
+    this.setStats()
     this.setCamera()
     this.setRenderer()
+    this.setResources()
     this.setWorld()
 
     watch(() => store.height + store.width, () => {
@@ -48,6 +52,12 @@ export class App {
       this.debug = new Pane()
     }
   }
+
+  setStats() {
+    if(this.config.debug){
+      this.stats = new Stats(true)
+    }
+  }
   
   setScene() {
     this.scene = new THREE.Scene()
@@ -62,12 +72,16 @@ export class App {
     this.targetElement.appendChild(this.renderer.instance.domElement)
   }
 
+  setResources() {
+    this.resources = new Resources()
+  }
+
   setWorld() {
     this.world = new World()
-    console.log(this.world)
   }
 
   update() {
+    if(this.stats) this.stats.update()
     this.camera.update()
     this.renderer.update()
 
