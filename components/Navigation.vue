@@ -36,14 +36,14 @@ import { store } from '~/store'
     div {
       transition: color 0.3s $power2;
       &.current {
-        color: black;
+        color: white;
         &:after {
           transform: scaleY(1);
         }
       }
       &:hover {
         cursor: pointer;
-        color: black;
+        color: white;
         &:after {
           transform: scaleY(1);
         }
@@ -58,7 +58,8 @@ import { store } from '~/store'
         width: 100%;
         height: 100%;
         z-index: -1;
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        // backdrop-filter: blur(4px);
         transform: scaleY(0);
         transform-origin: bottom center;
         transition: transform 0.3s $power2;

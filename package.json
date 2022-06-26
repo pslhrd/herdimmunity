@@ -7,7 +7,8 @@
     "preview": "nuxt preview"
   },
   "devDependencies": {
-    "nuxt": "3.0.0-rc.4"
+    "nuxt": "3.0.0-rc.4",
+    "vite-plugin-glsl": "^0.1.2"
   },
   "dependencies": {
     "gsap": "^3.10.4",

@@ -10,6 +10,7 @@ import { World } from '~/webgl/World'
 import { Resources } from '~/webgl/Resources'
 import { sceneEvents } from '~/webgl/sceneEvents'
 import { Device } from '~/webgl/utils/Device'
+import { Time } from '~/webgl/utils/Time'
 
 export class App {
   static instance
@@ -28,6 +29,7 @@ export class App {
       return
     }
 
+    this.setResources()
     this.setConfig()
     this.setDebug()
     this.setDevice()
@@ -35,7 +37,7 @@ export class App {
     this.setStats()
     this.setCamera()
     this.setRenderer()
-    this.setResources()
+    this.setTime()
     this.setWorld()
     this.setSceneEvents()
 
@@ -91,6 +93,10 @@ export class App {
 
   setSceneEvents() {
     this.sceneEvents = new sceneEvents()
+  }
+
+  setTime() {
+    this.time = new Time()
   }
 
   update() {
