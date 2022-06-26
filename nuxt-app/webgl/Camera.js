@@ -13,12 +13,15 @@ export class Camera {
 
     this.params = {
       Mode: 'default',
-      Camera: {x: 5, y: 5, z: 5}
+      Camera: {x: 0.1, y: 3.6, z: 5.7},
+      LookAt: {x: -0.1, y: 2, z: 0}
     }
     
     this.setCamera()
     this.setModes()
-    this.setDebug()
+    if (this.debug) {
+      this.setDebug()
+    }
   }
 
   setCamera() {
@@ -36,7 +39,7 @@ export class Camera {
     this.modes.default = {}
     this.modes.default.instance = this.instance.clone()
     this.modes.default.instance.position.set(this.params.Camera.x, this.params.Camera.y, this.params.Camera.z)
-    this.modes.default.instance.lookAt(0,0,0)
+    this.modes.default.instance.lookAt(this.params.LookAt.x, this.params.LookAt.y, this.params.LookAt.z)
 
 
     // Orbit
@@ -54,24 +57,23 @@ export class Camera {
   }
 
   setDebug() {
-    if (this.config.debug) {
-      // const helper = new THREE.CameraHelper(this.modes.default.instance)
-      // this.scene.add(helper)
-
-      const cameraFolder = this.debug.addFolder({
-        title: 'Camera'
-      })
-      cameraFolder.addInput(this.params, 'Mode', {
-        options: {
-          Default: 'default',
-          Debug: 'debug'
-        }
-      })
-      cameraFolder.addInput(this.params, 'Camera').on('change', (ev) => {
-        this.modes.default.instance.lookAt(0,0,0)
-        this.modes.default.instance.position.set(this.params.Camera.x, this.params.Camera.y, this.params.Camera.z)
-      })
-    }
+    const cameraFolder = this.debug.addFolder({
+      title: 'Camera'
+    })
+    cameraFolder.addInput(this.params, 'Mode', {
+      options: {
+        Default: 'default',
+        Debug: 'debug'
+      }
+    })
+    cameraFolder.addInput(this.params, 'Camera').on('change', (ev) => {
+      this.modes.default.instance.lookAt(this.params.LookAt.x, this.params.LookAt.y, this.params.LookAt.z)
+      this.modes.default.instance.position.set(this.params.Camera.x, this.params.Camera.y, this.params.Camera.z)
+    })
+    cameraFolder.addInput(this.params, 'LookAt').on('change', (ev) => {
+      this.modes.default.instance.lookAt(this.params.LookAt.x, this.params.LookAt.y, this.params.LookAt.z)
+      this.modes.default.instance.position.set(this.params.Camera.x, this.params.Camera.y, this.params.Camera.z)
+    })
   }
 
   resize() {

@@ -1,12 +1,15 @@
 import { Pane } from 'tweakpane'
+import { watch } from 'vue'
+import * as THREE from 'three'
+import Stats from '~/webgl/utils/Stats.js'
 import { store } from '~/store'
+
 import { Camera } from '~/webgl/Camera'
 import { Renderer } from '~/webgl/Renderer'
 import { World } from '~/webgl/World'
-import Stats from '~/webgl/utils/Stats.js'
 import { Resources } from '~/webgl/Resources'
-import { watch } from 'vue'
-import * as THREE from 'three'
+import { sceneEvents } from '~/webgl/sceneEvents'
+import { Device } from '~/webgl/utils/Device'
 
 export class App {
   static instance
@@ -27,12 +30,14 @@ export class App {
 
     this.setConfig()
     this.setDebug()
+    this.setDevice()
     this.setScene()
     this.setStats()
     this.setCamera()
     this.setRenderer()
     this.setResources()
     this.setWorld()
+    this.setSceneEvents()
 
     watch(() => store.height + store.width, () => {
       this.resize()
@@ -51,6 +56,10 @@ export class App {
     if (this.config.debug) {
       this.debug = new Pane()
     }
+  }
+
+  setDevice() {
+    this.device = new Device()
   }
 
   setStats() {
@@ -78,6 +87,10 @@ export class App {
 
   setWorld() {
     this.world = new World()
+  }
+
+  setSceneEvents() {
+    this.sceneEvents = new sceneEvents()
   }
 
   update() {

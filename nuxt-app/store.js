@@ -7,5 +7,7 @@ export const store = reactive({
   mouseY: 0,
   mouseX: 0,
 
-  assetsLoaded: false
+  assetsLoaded: false,
+
+  currentState: 0
 })

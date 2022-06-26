@@ -8,6 +8,16 @@ export default defineNuxtConfig({
     '@/assets/styles/reset.scss'
   ],
 
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@import "@/assets/styles/_variables.scss";'
+        },
+      },
+    },
+  },
+
   transpile: [
     'three',
     'gsap'

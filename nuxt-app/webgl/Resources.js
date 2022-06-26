@@ -85,7 +85,18 @@ export class Resources {
 
   fileLoadEnd(_resource, _data) {
     this.loaded++
-    this.items[_resource.name] = _data
+    let data = _data
+
+    if(_resource.type === 'texture') {
+      if(!(data instanceof THREE.Texture)) {
+        console.log(_data)
+        data = new THREE.Texture(_data)
+      }
+      data.needsUpdate = true
+    }
+
+    this.items[_resource.name] = data
+
     if(this.loaded === this.toLoad)
     {
       this.ended(_resource, _data)
@@ -94,13 +105,5 @@ export class Resources {
 
   ended(_resource, _data) {
     store.assetsLoaded = true
-
-    if(_resource.type === 'texture') {
-      if(!(data instanceof THREE.Texture))
-      {
-          data = new THREE.Texture(_data)
-      }
-      data.needsUpdate = true
-    }
   }
 }
