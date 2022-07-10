@@ -23,6 +23,7 @@ export class App {
     App.instance = this
 
     this.targetElement = _options.targetElement
+    this.video = _options.videoElement
 
     if(!this.targetElement) {
       console.warn('Missing \'targetElement\' property')

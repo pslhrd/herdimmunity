@@ -22,6 +22,7 @@ export default defineNuxtConfig({
 
   transpile: [
     'three',
-    'gsap'
+    'gsap',
+    'postprocessing'
   ]
 })

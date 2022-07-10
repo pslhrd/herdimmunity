@@ -39,9 +39,15 @@ void main() {
 
   vec3 col = 0.5 + 0.3 * cos( time + vUv.xyx + vec3(0, 1, 1));
 
-  float n = noise(vPosition * 2. + (time / 5.));
+  float n = noise(vPosition * 2. + (time / 10.));
 
-  float uFresnelPower = 0.2;
+  float alpha = 1.0;
+
+  vec3 colorA = vec3(0.804,0.808,0.788);
+  vec3 colorB = vec3(0.173,0.173,0.173);
+  vec3 sum = vec3(0.0);
+
+  float uFresnelPower = 0.6;
   vec3 uBaseColor = vec3(col);
   vec3 uFresnelColor = vec3(0.37);
 
@@ -52,8 +58,10 @@ void main() {
   fresnelFactor = pow(fresnelFactor, uFresnelPower);
   inversefresnelFactor = pow(inversefresnelFactor, uFresnelPower);
 
-  // gl_FragColor = vec4(fresnelFactor * uBaseColor + inversefresnelFactor * uFresnelColor, 1.0);
-  gl_FragColor = vec4(0.1, 0.1, 0.1, (n * 1.3));
+  sum = mix(colorA, colorB, n);
+
+  // gl_FragColor = vec4(fresnelFactor * sum + inversefresnelFactor * uFresnelColor, 1.0);
+  gl_FragColor = vec4(sum, 1.);
 
   #include <fog_fragment>
 

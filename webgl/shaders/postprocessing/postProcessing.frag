@@ -18,6 +18,10 @@ vec3 blendSoftLight(vec3 base, vec3 blend) {
 	);
 }
 
+float rand(vec2 uv, float t) {
+    return fract(sin(dot(uv, vec2(1225.6548, 321.8942))) * 4251.4865 + t);
+}
+
 void main() {
   
   vec4 diffuse = texture2D(tDiffuse, vUv);

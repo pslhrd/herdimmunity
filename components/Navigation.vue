@@ -25,13 +25,14 @@ import { store } from '~/store'
 <style lang="scss" scoped>
   .navigation {
     position: fixed;
-    bottom: 0;
+    bottom: 30px;
     left: 0;
     z-index: 20;
-    width: 100vw;
+    width: 40vw;
+    margin-left: 30vw;
     height: 60px;
     display: flex;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 
     div {
       transition: color 0.3s $power2;

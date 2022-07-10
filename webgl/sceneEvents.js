@@ -14,23 +14,16 @@ export class sceneEvents {
     this.camera = this.app.camera.modes.default.instance
     this.currentCamera = this.app.camera.currentCamera
     this.world = this.app.world
+  
+
+    this.positions = []
     
     watch(() => store.currentState, () => {
-      if(store.currentState === 0) {
-        this.sceneIntro()
-      }
-      if(store.currentState === 1) {
-        this.sceneVideo()
-      }
-      if(store.currentState === 2) {
-        this.sceneBlackSheep()
-      }
-      if(store.currentState === 3) {
-        this.scenePhases()
-      }
-      if(store.currentState === 4) {
-        this.sceneMerch()
-      }
+      this.moveCamera(store.currentState)
+    })
+
+    watch(() => store.assetsLoaded, () => {
+      this.getElements()
     })
 
     if (this.debug) {this.setDebug()}
@@ -45,6 +38,23 @@ export class sceneEvents {
       console.table(this.currentCamera.quaternion)
     });
   }
+  
+  getElements() {
+    this.scene.traverse((element) => {
+      if (element.userData.position) {
+        this.positions.splice(element.userData.position, 0, element)
+      }
+    })
+  }
+
+  moveCamera(nb) {
+    let newPosition = this.positions[nb] 
+    if (newPosition) {
+      console.log(newPosition.quaternion)
+      gsap.to(this.camera.position, {x:newPosition.position.x, y:newPosition.position.y, z:newPosition.position.z, duration:3, ease:'power2.inOut'})
+      gsap.to(this.camera.quaternion, {x:newPosition.quaternion.x, y:newPosition.quaternion.y, z:newPosition.quaternion.z, w:newPosition.quaternion.w, duration:3, ease:'power2.inOut'})
+    }
+  }
 
   sceneIntro() {
     console.log('Intro')
@@ -54,7 +64,8 @@ export class sceneEvents {
 
   sceneVideo() {
     console.log('YOFC Video')
-    gsap.to(this.camera.position, {x:0.1, y:15.5, z:0.8, duration:3, ease:'power2.inOut'})
+    gsap.to(this.camera.position, {x:8, y:1, z:6.5, duration:3, ease:'power2.inOut'})
+    gsap.to(this.camera.quaternion, {x:-0, y:0, z:0,w:1, duration:3, ease:'power2.inOut'})
   }
 
   sceneBlackSheep() {

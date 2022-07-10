@@ -6,8 +6,8 @@
     </Head>
 
     <Header />
-    <!-- <Loader />
-    <Introduction /> -->
+    <!-- <Loader /> -->
+    <!-- <Introduction />  -->
     <Navigation />
     <WebGL />
   </main>

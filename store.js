@@ -9,5 +9,5 @@ export const store = reactive({
 
   assetsLoaded: false,
 
-  currentState: 0
+  currentState: 1
 })

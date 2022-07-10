@@ -12,7 +12,7 @@ export class Camera {
     this.debug = this.app.debug
 
     this.params = {
-      Mode: 'default',
+      Mode: 'debug',
       Camera: {x: 0.1, y: 3.6, z: 5.7},
       LookAt: {x: -0.1, y: 2, z: 0}
     }
@@ -45,7 +45,7 @@ export class Camera {
     // Orbit
     this.modes.debug = {}
     this.modes.debug.instance = this.instance.clone()
-    this.modes.debug.instance.position.set(5, 5, 5)
+    this.modes.debug.instance.position.set(10, 10, 10)
     this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
     this.modes.debug.orbitControls.enabled = this.modes.debug.active
     this.modes.debug.orbitControls.screenSpacePanning = true
@@ -65,6 +65,10 @@ export class Camera {
         Default: 'default',
         Debug: 'debug'
       }
+    })
+
+    cameraFolder.addInput(store, 'currentState', {
+      step: 1
     })
     cameraFolder.addInput(this.params, 'Camera').on('change', (ev) => {
       this.modes.default.instance.lookAt(this.params.LookAt.x, this.params.LookAt.y, this.params.LookAt.z)

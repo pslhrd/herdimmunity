@@ -96,6 +96,7 @@ export class Resources {
     }
 
     this.items[_resource.name] = data
+    console.log(_resource)
 
     if(this.loaded === this.toLoad)
     {

@@ -1,5 +1,9 @@
 <template>
   <div class="webgl" ref="container"></div>
+
+  <video class="video" ref="video" muted loop crossOrigin="anonymous" playsinline style="display:none">
+    <source src="/textures/video.mp4">
+  </video>
 </template>
   
 <script setup>
@@ -9,10 +13,11 @@ import { useResize } from '~/webgl/utils/resizeObserver'
 import { store } from '~/store'
 
 const container = ref(null)
+const video = ref(null)
 useResize()
 
 onMounted(() => {
-  const app = new App({targetElement: container.value})
+  const app = new App({targetElement: container.value, videoElement: video.value})
 })
 </script>
 

@@ -1,6 +1,4 @@
 export const Assets = [
-    { name: 'no-draco', source: '/models/NO_DRACO.glb', type: 'model' },
-    { name: 'draco', source: '/models/DRACO.glb', type: 'model' },
-    { name: 'roughness', source: '/textures/roughness.jpg', type: 'texture' },
+    { name: 'draco', source: '/models/scene.glb', type: 'model' },
     { name: 'noise', source: '/textures/noise.png', type: 'texture' }
 ]
