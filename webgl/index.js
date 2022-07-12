@@ -41,7 +41,7 @@ export class App {
     this.setTime()
     this.setWorld()
     this.setSceneEvents()
-
+    
     watch(() => store.height + store.width, () => {
       this.resize()
     })

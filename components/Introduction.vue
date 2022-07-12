@@ -1,20 +1,23 @@
 <template>
   <section class="introduction">
     <div class="introduction-title">
-      <span>HERD</span>
-      <span>IMMUNITY</span>
+      <span class="word" v-splitChars>HERD</span>
+      <span class="word" v-splitChars>IMMUNITY</span>
     </div>
   </section>
 </template>
 
 <script setup>
+  import { App } from '~/webgl/index'
   import { store } from '~/store'
   import { ref, onMounted, onUnmounted } from 'vue'
   import gsap from 'gsap'
 
   onMounted(() => {
     watch(() => store.assetsLoaded, () => {
-      console.log('loaded')
+      console.log(App.instance)
+      gsap.fromTo('.split-letter', {y:'100%', opacity:1}, {y:'0%', opacity:1, duration: 1.2, stagger:0.04, ease:'expo.out'}, 1.5)
+      gsap.to('.split-letter', {y:'-100%', opacity:1, duration: 1.2, stagger:0.02, ease:'expo.out'}, 4)
     })
   })
 </script>
@@ -38,6 +41,15 @@
   font-size: 20vw;
   line-height: 16vw;
   text-align: center;
+
+  .word {
+    overflow: hidden;
+  }
+
+  .split-letter {
+    opacity: 0;
+    display: inline-block;
+  }
 
   span {
     display: block;

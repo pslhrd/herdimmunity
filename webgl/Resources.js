@@ -62,6 +62,7 @@ export class Resources {
   load() {
     for (const asset of this.assets) {
       this.toLoad++
+      store.toLoad++
       const extensionMatch = asset.source.match(/\.([a-z]+)$/)
 
       if(typeof extensionMatch[1] !== 'undefined') {
@@ -85,18 +86,17 @@ export class Resources {
 
   fileLoadEnd(_resource, _data) {
     this.loaded++
+    store.loaded++
     let data = _data
 
     if(_resource.type === 'texture') {
       if(!(data instanceof THREE.Texture)) {
-        console.log(_data)
         data = new THREE.Texture(_data)
       }
       data.needsUpdate = true
     }
 
     this.items[_resource.name] = data
-    console.log(_resource)
 
     if(this.loaded === this.toLoad)
     {

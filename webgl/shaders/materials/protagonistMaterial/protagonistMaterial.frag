@@ -44,6 +44,14 @@ void main() {
   vec3 sum = vec3(0.0);
 
   sum = mix(colorA, colorB, n);
+
+	vec3 rimColor = vec3(0.75); // vec3(0.9, 1., 0.4);
+	float rimLightPower = 2.6;
+	float rimLightStrength = .19;
+	float rightLight = rimLightPower * abs( dot( vWorldNormal, normalize( vViewDirection ) ) );
+	rightLight = 1. - smoothstep(.0, 1., rightLight );
+	sum.rgb += vec3( rightLight * rimLightStrength ) * rimColor;
+  
   gl_FragColor = vec4(sum, 1.0);
 
   #include <fog_fragment>

@@ -15,7 +15,7 @@
     "postprocessing": "^6.28.1",
     "sass": "^1.53.0",
     "sass-loader": "^13.0.1",
-    "screen-space-reflections": "^1.0.7",
+    "screen-space-reflections": "^1.0.8",
     "stats.js": "^0.17.0",
     "three": "^0.141.0",
     "tweakpane": "^3.1.0"

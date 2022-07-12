@@ -6,6 +6,8 @@ import { watch } from 'vue'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+
+// import { SSRPass } from 'screen-space-reflections'
 // import * as POSTPROCESSING from 'postprocessing'
 // import { SSRPass } from '~/webgl/utils/SSR'
 
@@ -108,6 +110,7 @@ export class Renderer {
         opacity: {value: 1.0},
         noise: {value: this.resources.items.noise},
         res: {value: new THREE.Vector4()},
+        uvOverlayOffset: { value: new THREE.Vector4() },
         dpi: { value: 0 },
         ditherOffset: { value: [ 0, 0 ] },
       },
@@ -127,14 +130,8 @@ export class Renderer {
   setPostProcess() {
     this.postProcess = {}
 
-    /**
-     * Render pass
-     */
     this.postProcess.renderPass = new RenderPass(this.scene, this.camera.currentCamera)
 
-    /**
-     * Effect composer
-     */
     this.renderTarget = new THREE.WebGLRenderTarget(
         store.width,
         store.height,
@@ -144,14 +141,33 @@ export class Renderer {
             magFilter: THREE.LinearFilter,
             format: THREE.RGBFormat,
             encoding: THREE.sRGBEncoding,
-            samples: 2
+            samples: 1
         }
     )
+
+    this.processingShader = {
+      uniforms: {
+        ...uniforms,
+        tDiffuse: {value: null},
+        opacity: {value: 1.0},
+        noise: {value: this.resources.items.noise},
+        grunge: {value: this.resources.items.grunge},
+        res: {value: new THREE.Vector4()},
+        dpi: { value: 0 },
+        ditherOffset: { value: [ 0, 0 ] },
+      },
+
+      vertexShader: vs,
+      fragmentShader: fs
+    }
+    
+    this.postProcessingPass = new ShaderPass(this.processingShader)
     this.postProcess.composer = new EffectComposer(this.instance, this.renderTarget)
     this.postProcess.composer.setSize(store.width, store.height)
     this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
 
     this.postProcess.composer.addPass(this.postProcess.renderPass)
+    this.postProcess.composer.addPass(this.postProcessingPass)
   }
 
 
@@ -234,6 +250,7 @@ export class Renderer {
   update() {
     if(this.usePostProcess & store.assetsLoaded) {
       this.postProcess.composer.render()
+      // this.updateNoise(this.noises.dither)
       // this.postProcess.composer.render()
 
       // if(this.SSRPass) {
@@ -250,6 +267,7 @@ export class Renderer {
   }
 
   resize() {
+    
     // Instance
     this.instance.setSize(store.width, store.height)
     this.instance.setPixelRatio(this.config.pixelRatio)
@@ -259,6 +277,7 @@ export class Renderer {
     this.postProcess.composer.setSize(store.width, store.height)
     this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
     this.processingShader.uniforms.res.value.set(store.width, store.height, 1 / store.width, 1 / store.height)
+    console.log(this.processingShader.uniforms.res.value)
   }
 
   updateNoise(noise) {

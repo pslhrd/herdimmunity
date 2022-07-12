@@ -32,8 +32,8 @@ export class World {
     const rectLight = new THREE.RectAreaLight( 0xffffff, 20,  2, 2 )
     rectLight.position.set( 0, 3, 0 )
     rectLight.lookAt( 0, 0, 0 )
-    const helper = new RectAreaLightHelper( rectLight );
-    this.scene.add(rectLight, helper)
+    // const helper = new RectAreaLightHelper( rectLight );
+    this.scene.add(rectLight)
     // this.scene.fog = new THREE.Fog(0x000000, 12, 16)
   }
 
@@ -46,36 +46,36 @@ export class World {
       // if (element.name === "GROUND") {
       // }
 
-      // if (element.name === 'CHARACTERS') {
-      //   element.children[0].material = new THREE.ShaderMaterial({
-      //     uniforms: {
-      //       ...THREE.UniformsUtils.merge([
-      //         THREE.UniformsLib['fog'],
-      //       ]),
-      //       ...this.uniforms
-      //     },
-      //     vertexShader: vs,
-      //     fragmentShader: fs,
-      //     fog: true
-      //   })
-      //   element.children[1].material = new THREE.ShaderMaterial({
-      //     uniforms: {
-      //       ...THREE.UniformsUtils.merge([
-      //         THREE.UniformsLib['fog'],
-      //       ]),
-      //       ...this.uniforms
-      //     },
-      //     vertexShader: vs2,
-      //     fragmentShader: fs2,
-      //     fog: true
-      //   })
-      // }
+      if (element.name === 'CHARACTERS') {
+        element.children[0].material = new THREE.ShaderMaterial({
+          uniforms: {
+            ...THREE.UniformsUtils.merge([
+              THREE.UniformsLib['fog'],
+            ]),
+            ...this.uniforms
+          },
+          vertexShader: vs,
+          fragmentShader: fs,
+          fog: true
+        })
+        element.children[1].material = new THREE.ShaderMaterial({
+          uniforms: {
+            ...THREE.UniformsUtils.merge([
+              THREE.UniformsLib['fog'],
+            ]),
+            ...this.uniforms
+          },
+          vertexShader: vs2,
+          fragmentShader: fs2,
+          fog: true
+        })
+      }
     })
     // const hemiLight = new THREE.HemisphereLight(0x443333, 0x111122)
     // this.scene.add(hemiLight)
     const ambientlight = new THREE.AmbientLight()
     const directional = new THREE.DirectionalLight()
-    this.scene.add(ambientlight, directional) 
+    this.scene.add(ambientlight) 
   }
 
   setVideoPlayer() {

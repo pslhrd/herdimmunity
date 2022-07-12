@@ -1,5 +1,7 @@
 <template>
-  <div class="loader" v-if="!store.assetsLoaded"></div>
+  <div class="loader" v-if="!store.assetsLoaded">
+    <span>{{ store.loaded }} / {{ store.toLoad }}</span>
+  </div>
 </template>
 
 <script setup>
@@ -16,5 +18,12 @@
   position: fixed;
   background-color: black;
   z-index: 25;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  font-size: 50px;
 }
 </style>

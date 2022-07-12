@@ -6,7 +6,7 @@
     </Head>
 
     <Header />
-    <!-- <Loader /> -->
+    <Loader />
     <!-- <Introduction />  -->
     <Navigation />
     <WebGL />
