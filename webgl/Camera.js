@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { App } from '~/webgl/index'
 import { store } from '~/store'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-
+import { lerp } from '~/webgl/utils/Math'
 export class Camera {
   constructor(_options) {
     this.app = new App()
@@ -13,8 +13,8 @@ export class Camera {
 
     this.params = {
       Mode: 'debug',
-      Camera: {x: 0.1, y: 3.6, z: 5.7},
-      LookAt: {x: -0.1, y: 2, z: 0}
+      Camera: {x: 0, y: 2, z: 2},
+      LookAt: {x: -0, y: 1, z: 0}
     }
     
     this.setCamera()
@@ -45,7 +45,7 @@ export class Camera {
     // Orbit
     this.modes.debug = {}
     this.modes.debug.instance = this.instance.clone()
-    this.modes.debug.instance.position.set(10, 10, 10)
+    this.modes.debug.instance.position.set(6, 6, 6)
     this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
     this.modes.debug.orbitControls.enabled = this.modes.debug.active
     this.modes.debug.orbitControls.screenSpacePanning = true
@@ -99,6 +99,15 @@ export class Camera {
     this.instance.position.copy(this.modes[this.params.Mode].instance.position)
     this.instance.quaternion.copy(this.modes[this.params.Mode].instance.quaternion)
     this.instance.updateMatrixWorld() // To be used in projection
+    
+    // Lerp Rotation
+    let targetX = store.mouseX * .0002;
+    let targetY = store.mouseY * .0001;
+
+    // this.currentCamera.rotation.y += 0.05 * ( targetX - this.currentCamera.rotation.y );
+    // this.currentCamera.rotation.x += 0.05 * ( targetY - this.currentCamera.rotation.x );
+
+    // this.currentCamera.position.y += 0.05 * ( targetY - this.currentCamera.position.y );
   }
 
   destroy() {

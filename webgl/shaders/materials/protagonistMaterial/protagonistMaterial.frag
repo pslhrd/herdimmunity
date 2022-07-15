@@ -3,9 +3,12 @@
 
 varying vec2 vUv;
 uniform float time;
+uniform sampler2D matcap;
+uniform sampler2D roughness;
 varying vec3 vWorldNormal;
 varying vec3 vViewDirection;
 varying vec3 vPosition;
+varying vec3 vWorldPosition;
 
 
 // NOISE FUNCTION
@@ -35,25 +38,54 @@ float noise(vec3 p){
     return o4.y * d.y + o4.x * (1.0 - d.y);
 }
 
+vec3 blendSoftLight(vec3 base, vec3 blend) {
+	return mix(
+		sqrt(base) * (2.0 * blend - 1.0) + 2.0 * base * (1.0 - blend),
+		2.0 * base * blend + base * base * (1.0 - 2.0 * blend),
+		step(base, vec3(0.5))
+	);
+}
+
+vec3 blendScreen(vec3 base, vec3 blend) {
+  return  1.0 - ((1.0 - base) * (1.0 - blend));
+}
+
 void main() {
 
-  float n = noise(vPosition * 2. + (time / 10.));
+  // DIFFUSE
+  vec3 diffuse = vec3(0.0);
 
+  // MATCAP
+  highp vec2 muv = vec2(viewMatrix * vec4(normalize(vWorldNormal), 0))*0.5+vec2(0.5,0.5);
+  vec3 matcapTexture = texture2D(matcap, vec2(muv.x, 1.0-muv.y)).rgb;
+
+  // NOISE ANIMATIONS
+  float n = noise(vPosition * 4. + (time / 10.));
   vec3 colorA = vec3(0.239,0.239,0.239);
   vec3 colorB = vec3(0.09,0.09,0.09);
-  vec3 sum = vec3(0.0);
+  vec3 sum = mix(colorA, colorB, n);
 
-  sum = mix(colorA, colorB, n);
+  diffuse = blendScreen(sum, matcapTexture * 0.2);
 
+  // RIM LIGHT
 	vec3 rimColor = vec3(0.75); // vec3(0.9, 1., 0.4);
-	float rimLightPower = 2.6;
+	float rimLightPower = 1.6;
 	float rimLightStrength = .19;
 	float rightLight = rimLightPower * abs( dot( vWorldNormal, normalize( vViewDirection ) ) );
 	rightLight = 1. - smoothstep(.0, 1., rightLight );
-	sum.rgb += vec3( rightLight * rimLightStrength ) * rimColor;
-  
-  gl_FragColor = vec4(sum, 1.0);
 
-  #include <fog_fragment>
+	diffuse.rgb += vec3( rightLight * rimLightStrength ) * rimColor;
+
+  // ROUGHNESS
+  vec3 roughnessTexture = texture2D(roughness, vUv).rgb;
+  diffuse = blendSoftLight(diffuse, (roughnessTexture * 0.2));
+
+  // GROUND FOG
+  vec3 groundFog = vec3(0., 0., 0.);
+  diffuse = mix(groundFog, diffuse.rgb, (vWorldPosition.y * 0.9));
+
+  gl_FragColor = vec4(diffuse, 1.);
+
+  // #include <fog_fragment>
 
 }

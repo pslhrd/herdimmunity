@@ -7,6 +7,11 @@ export const store = reactive({
   mouseY: 0,
   mouseX: 0,
 
+  menuOpen: false,
+  sceneChanged: false,
+
+  sound: false,
+
   assetsLoaded: false,
   toLoad: 0,
   loaded: 0,

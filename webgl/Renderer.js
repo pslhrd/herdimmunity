@@ -3,6 +3,8 @@ import { App } from '~/webgl/index'
 import { store } from '~/store'
 import { watch } from 'vue'
 
+import prng from '~/webgl/utils/prng'
+
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
@@ -23,8 +25,9 @@ export class Renderer {
     this.config = this.app.config
     this.resources = this.app.resources
     this.debug = this.app.debug
+    this.time = this.app.time
 
-    this.usePostProcess = false
+    this.usePostProcess = true
     this.setInstance()
     
     watch(() => store.assetsLoaded, () => {
@@ -36,7 +39,7 @@ export class Renderer {
   }
 
   setInstance() {
-    this.clearColor = '#1D1D1D'
+    this.clearColor = '#000000'
 
     // Renderer
     this.instance = new THREE.WebGLRenderer({
@@ -58,77 +61,11 @@ export class Renderer {
     this.context = this.instance.getContext()
   }
 
-  oldPostProc() {
-    this.postProcess = {}
-
-    this.postProcess.renderPass = new POSTPROCESSING.RenderPass(this.scene, this.camera.currentCamera)
-
-    this.params = {
-      enabled: true,
-      floorRoughness: 1,
-      floorNormalScale: 1,
-      antialias: false,
-    
-      width: store.width,
-      height: store.height,
-      useBlur: false,
-      blurWidth: 935,
-      blurHeight: 304,
-      rayStep: 0.534,
-      intensity: 1,
-      power: 1,
-      depthBlur: 0.11,
-      enableJittering: false,
-      jitter: 0.17,
-      jitterSpread: 0.59,
-      jitterRough: 0.8,
-      roughnessFadeOut: 1,
-      maxDepth: 1,
-      thickness: 3.5,
-      ior: 1.45,
-      rayFadeOut: 0,
-      MAX_STEPS: 50,
-      NUM_BINARY_SEARCH_STEPS: 7,
-      maxDepthDifference: 3,
-      stretchMissedRays: false,
-      useMRT: true,
-      useNormalMap: true,
-      useRoughnessMap: true,
-
-      blurKernelSize: 3,
-    }
-
-    // this.postProcess.composer = new POSTPROCESSING.EffectComposer(this.instance)
-    this.postProcess.composer.setSize(store.width, store.height)
-    // this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
-    this.postProcess.composer.addPass(this.postProcess.renderPass)
-
-    this.processingShader = {
-      uniforms: {
-        ...uniforms,
-        tDiffuse: {value: null},
-        opacity: {value: 1.0},
-        noise: {value: this.resources.items.noise},
-        res: {value: new THREE.Vector4()},
-        uvOverlayOffset: { value: new THREE.Vector4() },
-        dpi: { value: 0 },
-        ditherOffset: { value: [ 0, 0 ] },
-      },
-    
-      vertexShader: vs,
-      fragmentShader: fs
-    }
-
-    // this.postProcessingPass = new ShaderPass(this.processingShader)
-    // this.postProcessingPass.renderToScreen = true
-    // this.postProcess.composer.addPass(this.postProcessingPass)
-
-    // this.SSRPass = new SSRPass(this.scene, this.camera.currentCamera, this.params)
-    this.postProcess.composer.addPass(this.SSRPass)
-  }
-
   setPostProcess() {
     this.postProcess = {}
+    this.noises = {}
+    const ensureFloat = i => i.toString().includes('.') ? i : i + '.'
+    this.noiseSize = 128
 
     this.postProcess.renderPass = new RenderPass(this.scene, this.camera.currentCamera)
 
@@ -139,12 +76,13 @@ export class Renderer {
             generateMipmaps: false,
             minFilter: THREE.LinearFilter,
             magFilter: THREE.LinearFilter,
-            format: THREE.RGBFormat,
+            format: THREE.RGBAFormat,
             encoding: THREE.sRGBEncoding,
             samples: 1
         }
     )
-
+    this.resources.items.noise.wrapS = 1000
+    this.resources.items.noise.wrapT = 1000
     this.processingShader = {
       uniforms: {
         ...uniforms,
@@ -152,10 +90,15 @@ export class Renderer {
         opacity: {value: 1.0},
         noise: {value: this.resources.items.noise},
         grunge: {value: this.resources.items.grunge},
-        res: {value: new THREE.Vector4()},
-        dpi: { value: 0 },
+        dpi: { value: 1 },
         ditherOffset: { value: [ 0, 0 ] },
       },
+
+      defines: {
+        NOISE_SIZE: ensureFloat(this.noiseSize),
+      },
+
+      uniformsNeedUpdate: true,
 
       vertexShader: vs,
       fragmentShader: fs
@@ -168,6 +111,15 @@ export class Renderer {
 
     this.postProcess.composer.addPass(this.postProcess.renderPass)
     this.postProcess.composer.addPass(this.postProcessingPass)
+
+    this.noises.dither = {
+			maxFrames: 1,
+			frame: 0,
+      value: this.postProcess.composer.passes[1].uniforms.ditherOffset.value
+    }
+  
+
+    console.log(this.postProcess.composer.passes[1].uniforms.ditherOffset.value)
   }
 
 
@@ -250,17 +202,7 @@ export class Renderer {
   update() {
     if(this.usePostProcess & store.assetsLoaded) {
       this.postProcess.composer.render()
-      // this.updateNoise(this.noises.dither)
-      // this.postProcess.composer.render()
-
-      // if(this.SSRPass) {
-      //   this.SSRPass.setSize(this.params.width, this.params.height)
-      //   for (const key of Object.keys(this.params)) {
-      //     if (key in this.SSRPass.reflectionUniforms) {
-      //       this.SSRPass.reflectionUniforms[key].value = this.params[key]
-      //     }
-      //   }
-      // }
+      this.updateNoise(this.noises.dither)
     } else {
       this.instance.render(this.scene, this.camera.currentCamera)
     }
@@ -275,17 +217,15 @@ export class Renderer {
     
     // Post Process
     this.postProcess.composer.setSize(store.width, store.height)
-    this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
-    this.processingShader.uniforms.res.value.set(store.width, store.height, 1 / store.width, 1 / store.height)
-    console.log(this.processingShader.uniforms.res.value)
+    this.postProcess.composer.setPixelRatio(this.config.pixelRatio) 
   }
 
   updateNoise(noise) {
 		noise.frame += 1;
 		if (noise.frame < noise.maxFrames) return;
 		noise.frame = 0;
-		noise.value[ 0 ] = prng.randomInt(-noiseSize * 0.5, noiseSize * 0.5);
-		noise.value[ 1 ] = prng.randomInt(-noiseSize * 0.5, noiseSize * 0.5);
+		noise.value[ 0 ] = prng.randomInt(-this.noiseSize * 0.5, this.noiseSize * 0.5);
+		noise.value[ 1 ] = prng.randomInt(-this.noiseSize * 0.5, this.noiseSize * 0.5);
 	}
 
   destroy() {

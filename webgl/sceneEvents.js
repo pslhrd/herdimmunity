@@ -42,18 +42,18 @@ export class sceneEvents {
   getElements() {
     this.scene.traverse((element) => {
       if (element.userData.position) {
-        this.positions.splice(element.userData.position, 0, element)
+        this.positions.push(element)
       }
     })
   }
 
   moveCamera(nb) {
-    let newPosition = this.positions[nb] 
-    if (newPosition) {
-      console.log(newPosition.quaternion)
-      gsap.to(this.camera.position, {x:newPosition.position.x, y:newPosition.position.y, z:newPosition.position.z, duration:3, ease:'power2.inOut'})
-      gsap.to(this.camera.quaternion, {x:newPosition.quaternion.x, y:newPosition.quaternion.y, z:newPosition.quaternion.z, w:newPosition.quaternion.w, duration:3, ease:'power2.inOut'})
-    }
+    this.positions.forEach(element => {
+      if(element.userData.position === nb) {
+        gsap.to(this.camera.position, {x:element.position.x, y:element.position.y, z:element.position.z, duration:3, ease:'power2.inOut'})
+        gsap.to(this.camera.quaternion, {x:element.quaternion.x, y:element.quaternion.y, z:element.quaternion.z, w:element.quaternion.w, duration:3, ease:'power2.inOut'})
+      }    
+    })
   }
 
   sceneIntro() {

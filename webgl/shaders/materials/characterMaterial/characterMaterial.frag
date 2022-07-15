@@ -3,9 +3,12 @@
 
 varying vec2 vUv;
 uniform float time;
+uniform sampler2D matcap;
+uniform sampler2D roughness;
 varying vec3 vWorldNormal;
 varying vec3 vViewDirection;
 varying vec3 vPosition;
+varying vec3 vWorldPosition;
 
 
 // NOISE FUNCTION
@@ -35,48 +38,54 @@ float noise(vec3 p){
     return o4.y * d.y + o4.x * (1.0 - d.y);
 }
 
+vec3 blendSoftLight(vec3 base, vec3 blend) {
+	return mix(
+		sqrt(base) * (2.0 * blend - 1.0) + 2.0 * base * (1.0 - blend),
+		2.0 * base * blend + base * base * (1.0 - 2.0 * blend),
+		step(base, vec3(0.5))
+	);
+}
+
+vec3 blendScreen(vec3 base, vec3 blend) {
+  return  1.0 - ((1.0 - base) * (1.0 - blend));
+}
+
 void main() {
 
-  vec3 col = 0.5 + 0.3 * cos( time + vUv.xyx + vec3(0, 1, 1));
+  // DIFFUSE
+  vec3 diffuse = vec3(0.455,0.455,0.455);
 
-  float n = noise(vPosition * 2. + (time / 10.));
+  // MATCAP
+  highp vec2 muv = vec2(viewMatrix * vec4(normalize(vWorldNormal), 0))*0.5+vec2(0.5,0.5);
+  vec3 matcapTexture = texture2D(matcap, vec2(muv.x, 1.0-muv.y)).rgb;
 
-  float alpha = 1.0;
+  // NOISE ANIMATIONS
+  // float n = noise(vPosition * 4. + (time / 10.));
+  // vec3 colorA = vec3(0.455,0.455,0.455);
+  // vec3 colorB = vec3(0.855,0.847,0.824);
+  // vec3 sum = mix(colorA, colorB, n);
 
-  vec3 colorA = vec3(0.804,0.808,0.788);
-  vec3 colorB = vec3(0.173,0.173,0.173);
-  vec3 sum = vec3(0.0);
+  // diffuse = blendScreen(sum, matcapTexture * 0.3);
 
-  // float uFresnelPower = 0.6;
-  // vec3 uBaseColor = vec3(col);
-  // vec3 uFresnelColor = vec3(0.37);
-
-  // float fresnelFactor = abs(dot(vViewDirection, vWorldNormal));
-  // float inversefresnelFactor = 1.0 - fresnelFactor;
-
-  // Shaping function
-  // fresnelFactor = pow(fresnelFactor, uFresnelPower);
-  // inversefresnelFactor = pow(inversefresnelFactor, uFresnelPower);
-
-  sum = mix(colorA, colorB, n);
-
+  // RIM LIGHT
 	vec3 rimColor = vec3(0.75); // vec3(0.9, 1., 0.4);
-	float rimLightPower = 2.6;
+	float rimLightPower = 1.6;
 	float rimLightStrength = .19;
 	float rightLight = rimLightPower * abs( dot( vWorldNormal, normalize( vViewDirection ) ) );
 	rightLight = 1. - smoothstep(.0, 1., rightLight );
-	sum.rgb += vec3( rightLight * rimLightStrength ) * rimColor;
 
-  sum += sum * abs(vWorldNormal.x) * 0.2;
+	diffuse.rgb += vec3( rightLight * rimLightStrength ) * rimColor;
 
-	// rimLightPower = 1.2;
-	// rimLightStrength = .29;
-	// rightLight = rimLightPower * abs( dot( vWorldNormal, normalize( vViewDirection ) ) );
-	// rightLight = 1. - smoothstep(.0, 1., rightLight );
-	// sum.rgb += sum.rgb * vec3( rightLight * rimLightStrength ) * rimColor;
-  // gl_FragColor = vec4(fresnelFactor * sum + inversefresnelFactor * uFresnelColor, 1.0);
-  gl_FragColor = vec4(sum, 1.);
+  // ROUGHNESS
+  vec3 roughnessTexture = texture2D(roughness, vUv).rgb;
+  diffuse = blendSoftLight(diffuse, (roughnessTexture * 0.15));
 
-  #include <fog_fragment>
+  // GROUND FOG
+  vec3 groundFog = vec3(0., 0., 0.);
+  diffuse = mix(groundFog, diffuse.rgb, (vWorldPosition.y * 0.9));
+
+  gl_FragColor = vec4(diffuse, 1.);
+
+  // #include <fog_fragment>
 
 }

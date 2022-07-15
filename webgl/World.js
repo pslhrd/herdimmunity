@@ -34,39 +34,41 @@ export class World {
     rectLight.lookAt( 0, 0, 0 )
     // const helper = new RectAreaLightHelper( rectLight );
     this.scene.add(rectLight)
-    // this.scene.fog = new THREE.Fog(0x000000, 12, 16)
+    this.scene.fog = new THREE.Fog(0x000000, 12, 16)
   }
 
   setDummy() {
     this.scene.add(this.resources.items.draco.scene)
     this.resources.items.draco.scene.traverse((element) => {
-      // if (element.name === 'SCREEN') {
-      // }
 
-      // if (element.name === "GROUND") {
-      // }
-
-      if (element.name === 'CHARACTERS') {
-        element.children[0].material = new THREE.ShaderMaterial({
+      if (element.name === 'PROTAGONIST') {
+        element.material = new THREE.ShaderMaterial({
           uniforms: {
             ...THREE.UniformsUtils.merge([
               THREE.UniformsLib['fog'],
             ]),
-            ...this.uniforms
-          },
-          vertexShader: vs,
-          fragmentShader: fs,
-          fog: true
-        })
-        element.children[1].material = new THREE.ShaderMaterial({
-          uniforms: {
-            ...THREE.UniformsUtils.merge([
-              THREE.UniformsLib['fog'],
-            ]),
-            ...this.uniforms
+            ...this.uniforms,
+            matcap: {value: this.resources.items.matcap},
+            roughness: {value: this.resources.items.roughness}
           },
           vertexShader: vs2,
           fragmentShader: fs2,
+          fog: true
+        })
+      }
+
+      if (element.name === 'PEOPLE') {
+        element.material = new THREE.ShaderMaterial({
+          uniforms: {
+            ...THREE.UniformsUtils.merge([
+              THREE.UniformsLib['fog'],
+            ]),
+            ...this.uniforms,
+            matcap: {value: this.resources.items.matcap},
+            roughness: {value: this.resources.items.roughness}
+          },
+          vertexShader: vs,
+          fragmentShader: fs,
           fog: true
         })
       }

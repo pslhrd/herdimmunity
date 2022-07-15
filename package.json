@@ -11,6 +11,7 @@
     "vite-plugin-glsl": "^0.1.2"
   },
   "dependencies": {
+    "fast-random": "^2.0.4",
     "gsap": "^3.10.4",
     "postprocessing": "^6.28.1",
     "sass": "^1.53.0",

@@ -11,7 +11,9 @@ import { Resources } from '~/webgl/Resources'
 import { sceneEvents } from '~/webgl/sceneEvents'
 import { Device } from '~/webgl/utils/Device'
 import { Time } from '~/webgl/utils/Time'
+import { Mouse } from '~/webgl/utils/Mouse'
 
+import { uniforms } from '~/webgl/shaders/uniforms'
 export class App {
   static instance
 
@@ -34,11 +36,12 @@ export class App {
     this.setConfig()
     this.setDebug()
     this.setDevice()
+    this.setTime()
+    this.setMouse()
     this.setScene()
     this.setStats()
     this.setCamera()
     this.setRenderer()
-    this.setTime()
     this.setWorld()
     this.setSceneEvents()
     
@@ -51,7 +54,7 @@ export class App {
 
   setConfig() {
     this.config = {}
-    this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
+    this.config.pixelRatio = 1
     this.config.debug = window.location.hash === '#debug'
   }
 
@@ -80,6 +83,8 @@ export class App {
   }
 
   setRenderer() {
+    uniforms.res.value.set(store.width, store.height, 1 / store.width, 1 / store.height)
+    uniforms.pixelratio.value = this.config.pixelRatio
     this.renderer = new Renderer({rendererInstance: this.rendererInstance})
     this.targetElement.appendChild(this.renderer.instance.domElement)
   }
@@ -97,7 +102,12 @@ export class App {
   }
 
   setTime() {
+    console.log('test')
     this.time = new Time()
+  }
+
+  setMouse() {
+    this.mouse = new Mouse()
   }
 
   update() {
@@ -112,7 +122,7 @@ export class App {
 
   resize() {
     this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
-
+    uniforms.res.value.set(store.width, store.height, 1 / store.width, 1 / store.height)
     if(this.camera) this.camera.resize()
     if(this.world) this.world.resize()
     if(this.renderer) this.renderer.resize()
