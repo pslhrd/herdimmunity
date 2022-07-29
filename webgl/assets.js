@@ -7,8 +7,8 @@ export const Assets = [
     { name: 'roughness', source: '/textures/roughness.jpg', type: 'texture' },
     { name: 'test', source: '/textures/test.jpg', type: 'texture' },
 
-    { name: 'teeDiffuse', source: '/assets/images/tee_diffuse.jpg', type: 'texture'},
-    { name: 'teeNormal', source: '/assets/images/tee_normal.jpg', type: 'texture'},
-    { name: 'grid', source: '/assets/images/uv-grid.jpg', type: 'texture'},
-    { name: 'normalMap', source: '/assets/images/normal.jpg', type: 'texture'},
+    { name: 'teeDiffuse', source: '/textures/tee_diffuse.jpg', type: 'texture'},
+    { name: 'teeNormal', source: '/textures/tee_normal.jpg', type: 'texture'},
+    { name: 'grid', source: '/textures/uv-grid.jpg', type: 'texture'},
+    { name: 'normalMap', source: '/textures/normal.jpg', type: 'texture'},
 ]
