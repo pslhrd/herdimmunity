@@ -14,18 +14,46 @@ export class sceneEvents {
     this.camera = this.app.camera.modes.default.instance
     this.currentCamera = this.app.camera.currentCamera
     this.world = this.app.world
+
+    this.video = this.app.video
   
 
     this.positions = []
     
-    watch(() => store.currentState, () => {
+    watch(() => store.currentState, (value, oldValue) => {
       this.moveCamera(store.currentState)
+
+      if(value === 1 & oldValue != 2) {
+        this.enterHome()
+      }
+      if(value === 2 & oldValue != 1) {
+        this.enterBlackSheep()
+      }
+
+      if(value === 3) {
+        this.enterMerch()
+      }
+      if(value === 4) {
+        this.enterVideo()
+      }
+      if(oldValue === 1 & value !=2) {
+        this.leaveHome()
+      }
+      if(oldValue === 2 & value != 1) {
+        this.leaveBlackSheep()
+      }
+      if(oldValue === 3) {
+        this.leaveMerch()
+      }
+      if(oldValue === 4) {
+        this.leaveVideo()
+      }
     })
 
     watch(() => store.assetsLoaded, () => {
       this.getElements()
+      this.sceneIntro()
     })
-
     if (this.debug) {this.setDebug()}
   }
 
@@ -51,36 +79,47 @@ export class sceneEvents {
     this.positions.forEach(element => {
       if(element.userData.position === nb) {
         gsap.to(this.camera.position, {x:element.position.x, y:element.position.y, z:element.position.z, duration:3, ease:'power2.inOut'})
-        gsap.to(this.camera.quaternion, {x:element.quaternion.x, y:element.quaternion.y, z:element.quaternion.z, w:element.quaternion.w, duration:3, ease:'power2.inOut'})
+        gsap.to(this.camera.rotation, {x:element.rotation.x, y:element.rotation.y, z:element.rotation.z, duration:3, ease:'power2.inOut'})
       }    
     })
   }
 
+  enterHome() {
+    gsap.to(this.world.Protagonist.material.uniforms.uAlpha, {value: 1, duration:1, ease:'power2.out'})
+    gsap.to(this.world.People.material.uniforms.uAlpha, {value: 1, duration:1, ease:'power2.out'})
+  }
+  leaveHome() {
+    gsap.to(this.world.Protagonist.material.uniforms.uAlpha, {value: 0, duration:1, ease:'power2.out'})
+    gsap.to(this.world.People.material.uniforms.uAlpha, {value: 0, duration:1, ease:'power2.out'})
+  }
+
+  enterBlackSheep() {
+    gsap.to(this.world.Protagonist.material.uniforms.uAlpha, {value: 1, duration:1, ease:'power2.out'})
+    gsap.to(this.world.People.material.uniforms.uAlpha, {value: 1, duration:1, ease:'power2.out'})
+  }
+  leaveBlackSheep() {
+    gsap.to(this.world.Protagonist.material.uniforms.uAlpha, {value: 0, duration:1, ease:'power2.out'})
+    gsap.to(this.world.People.material.uniforms.uAlpha, {value: 0, duration:1, ease:'power2.out'})
+  }
+
+  enterMerch() {
+    gsap.to(this.world.Teeshirt.material.uniforms.uAlpha, {value: 1, duration:1, ease:'power2.out'})
+  }
+  leaveMerch(){
+    gsap.to(this.world.Teeshirt.material.uniforms.uAlpha, {value: 0, duration:1, ease:'power2.out'})
+  }
+
+  enterVideo() {
+    this.video.play()
+    gsap.to(this.world.video3D.material, {opacity: 1, duration:1, ease:'power2.out'})
+  }
+  leaveVideo() {
+    gsap.to(this.world.video3D.material, {opacity: 0, duration:0.5, ease:'power2.out'})
+    this.video.pause()
+  }
+
   sceneIntro() {
-    console.log('Intro')
-    gsap.to(this.camera.quaternion, {x:-0.13630286779281925, y:0.017372058285982938, z:0.002390542830620354,w:0.990512001505957, duration:3, ease:'power2.inOut'})
-    gsap.to(this.camera.position, {x:0.1, y:3.6, z:5.7, duration:3, ease:'power2.inOut'})
-  }
-
-  sceneVideo() {
-    console.log('YOFC Video')
-    gsap.to(this.camera.position, {x:8, y:1, z:6.5, duration:3, ease:'power2.inOut'})
-    gsap.to(this.camera.quaternion, {x:-0, y:0, z:0,w:1, duration:3, ease:'power2.inOut'})
-  }
-
-  sceneBlackSheep() {
-    console.log('BlackSheep')
-    gsap.to(this.camera.quaternion, {x:-0.6893309359946934, y:-0.010562445396997244, z:-0.010052494943426197,w:0.7242998293340458, duration:3, ease:'power2.inOut'})
-    gsap.to(this.camera.position, {x:-0.16, y:12.7, z:0.8, duration:3, ease:'power2.inOut'})
-  }
-
-  scenePhases() {
-    console.log('Phases')
-    gsap.to(this.camera.quaternion, {x:-0.16401777924653838, y:0.19845811357810872, z:0.03370680407213799,w:0.9656999516440367, duration:3, ease:'power2.inOut'})
-    gsap.to(this.camera.position, {x:1.2, y:5, z:7.6, duration:3, ease:'power2.inOut'})
-  }
-
-  sceneMerch() {
-    console.log('Merch')
+    gsap.from(this.camera.position, {x:0, y:4, z:2, duration:4, ease:'power3.inOut'}, 1)
+    gsap.to(this.camera.rotation, {x:this.positions[0].rotation.x, y:this.positions[0].rotation.y, z:this.positions[0].rotation.z, duration:4, ease:'power3.inOut'}, 1)
   }
 }

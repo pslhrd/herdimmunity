@@ -5,6 +5,7 @@ varying vec3 vWorldNormal;
 varying vec3 vViewDirection;
 varying vec3 vPosition;
 varying vec3 vWorldPosition;
+varying vec3 vNormal;
 
 void main() {
   #include <begin_vertex>
@@ -13,6 +14,7 @@ void main() {
 
 	vUv = uv;
   vPosition = position;
+  vNormal = normal;
   
   vec4 worldPosition = modelMatrix * vec4(position, 1.0);
   vWorldPosition = worldPosition.xyz;

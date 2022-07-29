@@ -3,11 +3,12 @@ import { store } from '~/store'
 import { App } from '~/webgl/index'
 import { watch } from 'vue'
 import { uniforms } from '~/webgl/shaders/uniforms'
-import fs from '~/webgl/shaders/materials/characterMaterial/characterMaterial.frag'
-import vs from '~/webgl/shaders/materials/characterMaterial/characterMaterial.vert'
 
-import fs2 from '~/webgl/shaders/materials/protagonistMaterial/protagonistMaterial.frag'
-import vs2 from '~/webgl/shaders/materials/protagonistMaterial/protagonistMaterial.vert'
+import MerchMaterial from '~/webgl/shaders/materials/merchMaterial/merchMaterial'
+import ProtagonistMaterial from '~/webgl/shaders/materials/protagonistMaterial/protagonistMaterial'
+import TextMaterial from '~/webgl/shaders/materials/textMaterial/textMaterial'
+import CharacterMaterial from '~/webgl/shaders/materials/characterMaterial/characterMaterial'
+import GroundMaterial from '~/webgl/shaders/materials/groundMaterial/groundMaterial'
 
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
 
@@ -18,66 +19,72 @@ export class World {
     this.config = this.app.config
     this.resources = this.app.resources
     this.video = this.app.video
+    this.renderer = this.app.renderer
+    this.camera = this.app.camera.modes.default.instance
     this.uniforms = uniforms
 
     watch(() => store.assetsLoaded, () => {
-      this.setGround()
-      this.setDummy()
+      this.setMaterials()
+      this.setScene()
       this.setVideoPlayer()
     })
   
   }
 
-  setGround() {
-    const rectLight = new THREE.RectAreaLight( 0xffffff, 20,  2, 2 )
-    rectLight.position.set( 0, 3, 0 )
-    rectLight.lookAt( 0, 0, 0 )
-    // const helper = new RectAreaLightHelper( rectLight );
-    this.scene.add(rectLight)
-    this.scene.fog = new THREE.Fog(0x000000, 12, 16)
+  setMaterials() {
+    this.MerchMaterial = MerchMaterial.use();
+    this.CharacterMaterial = CharacterMaterial.use();
+    this.ProtagonistMaterial = ProtagonistMaterial.use();
+    this.TextMaterial = TextMaterial.use();
+    this.GroundMaterial = GroundMaterial.use();
+    // this.scene.fog = new THREE.Fog(0x000000, 12, 16)
   }
 
-  setDummy() {
+  setScene() {
     this.scene.add(this.resources.items.draco.scene)
     this.resources.items.draco.scene.traverse((element) => {
+      if (element.name === 'TEE') {
+        element.material = this.MerchMaterial
+        this.Teeshirt = element
+        element.material.uniforms.uAlpha.value = 0
+      }
+
+      if (element.name === 'GROUND') {
+        this.Ground = element
+      }
+
+      if (element.name === 'VIDEO') {
+        const videoTexture = new THREE.VideoTexture(this.video)
+        element.material = new THREE.MeshBasicMaterial( {map:videoTexture, transparent: true, opacity:0} );
+        element.material.needsUpdate = true;
+        this.video3D = element
+      }
 
       if (element.name === 'PROTAGONIST') {
-        element.material = new THREE.ShaderMaterial({
-          uniforms: {
-            ...THREE.UniformsUtils.merge([
-              THREE.UniformsLib['fog'],
-            ]),
-            ...this.uniforms,
-            matcap: {value: this.resources.items.matcap},
-            roughness: {value: this.resources.items.roughness}
-          },
-          vertexShader: vs2,
-          fragmentShader: fs2,
-          fog: true
-        })
+        this.Protagonist = element
+        element.material = this.ProtagonistMaterial
+      }
+
+      if (element.name === '1') {
+        console.log(element.position)
+        console.log(element.rotation)
+      }
+
+      if (element.name === 'TEXT') {
+        this.Text = element
+        element.material = this.TextMaterial
       }
 
       if (element.name === 'PEOPLE') {
-        element.material = new THREE.ShaderMaterial({
-          uniforms: {
-            ...THREE.UniformsUtils.merge([
-              THREE.UniformsLib['fog'],
-            ]),
-            ...this.uniforms,
-            matcap: {value: this.resources.items.matcap},
-            roughness: {value: this.resources.items.roughness}
-          },
-          vertexShader: vs,
-          fragmentShader: fs,
-          fog: true
-        })
+        this.People = element
+        element.material = this.CharacterMaterial
       }
+      
     })
-    // const hemiLight = new THREE.HemisphereLight(0x443333, 0x111122)
-    // this.scene.add(hemiLight)
-    const ambientlight = new THREE.AmbientLight()
+    
     const directional = new THREE.DirectionalLight()
-    this.scene.add(ambientlight) 
+    const ambientlight = new THREE.AmbientLight(0xffffff, 0.2)
+    this.scene.add(ambientlight, directional) 
   }
 
   setVideoPlayer() {

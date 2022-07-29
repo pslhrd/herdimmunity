@@ -41,8 +41,8 @@ export class App {
     this.setScene()
     this.setStats()
     this.setCamera()
-    this.setRenderer()
     this.setWorld()
+    this.setRenderer()
     this.setSceneEvents()
     
     watch(() => store.height + store.width, () => {
@@ -54,7 +54,7 @@ export class App {
 
   setConfig() {
     this.config = {}
-    this.config.pixelRatio = 1
+    this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
     this.config.debug = window.location.hash === '#debug'
   }
 

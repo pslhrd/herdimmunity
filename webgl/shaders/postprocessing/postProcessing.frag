@@ -69,10 +69,12 @@ vec4 spectrum_offset( float t ) {
 	return pow( ret, vec4(1.0/2.2) );
 }
 
+
 void main() {
   
 	vec2 uv = vUv;
 	vec2 pxCoords = vUv * res.xy / pixelratio;
+  vec2 m = res.xy / pixelratio;
 
   // ABERRATION
 	vec4 sumcol = vec4(0.0);
@@ -83,6 +85,7 @@ void main() {
 		sumw += w;
 		vec2 distortUV = barrelDistortion(vUv, barrelMax * t );
 		distortUV += (t + 0.01) * 0.0001;
+    // distortUV *= rotate2d( 0.001 * float(i));   
 		sumcol += w * texture2D( tDiffuse, distortUV );
 	}
   vec3 diffuse = (sumcol / sumw).rgb;      
@@ -93,7 +96,7 @@ void main() {
 
   // TEXTURE
   vec3 grungeTex = texture2D(grunge, vUv).rgb;
-  diffuse = blendScreen(diffuse, grungeTex * 0.6); 
+  diffuse = blendScreen(diffuse, grungeTex * 0.2); 
 
 
 	// Dithering
@@ -103,16 +106,5 @@ void main() {
 	diffuse = mix(diffuse, ditheredDiffuse, 0.85);
 
 
-  // RADIAL BLUR
-  // float strength = (distance(vUv, vec2(0.2)) * distance(vUv, vec2(0.5))) * -0.01;
-  // vec2 dir = normalize(vUv - vec2(0.5, 0.5)) * strength;
-
-  // for(float i = 0.; i < SAMPLE_AMOUNT; ++i) {
-  //   diffuse += texture2D(tDiffuse, vUv + barrelDistortion(grungeTex.rg * 0.05 + dir, barrelMax) *  (i / SAMPLE_AMOUNT)).rgb / SAMPLE_AMOUNT;
-  // }
-
-  // gl_FragColor /= numTaps;
   gl_FragColor = vec4(diffuse, 1.0);
-  // gl_FragColor.rgb = 0.5 + 0.3 * cos(vUv.xyx + time * 10.) + vec3(0.3, 0.2, 0.5);
-  // gl_FragColor.a = 1.0;
 }

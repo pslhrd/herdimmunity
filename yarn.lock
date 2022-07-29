@@ -3726,10 +3726,10 @@ sax@^1.2.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-screen-space-reflections@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/screen-space-reflections/-/screen-space-reflections-1.0.8.tgz#304de62086cdcfa92151a48d19a608539e548586"
-  integrity sha512-UBahDIY3TBds7RIkiGmBMQLZKjBYuAdatOBHEs8jpkSe414cJ66nKNPh/cBFL7ZekTorluNbmxdbJ1GEw/e8xQ==
+screen-space-reflections@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/screen-space-reflections/-/screen-space-reflections-2.0.6.tgz#ac7e2a68fc583e1eafd47ec854e1a3ec09f5047d"
+  integrity sha512-ZWMLb4YRFSkHbduJZPLVImmux5+LlCgkaya0aeYZvifMRvM83U9kYfdPVWt27NffjOtvju+jPZaM7aLOGElFYg==
 
 scule@^0.2.1:
   version "0.2.1"

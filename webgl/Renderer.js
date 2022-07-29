@@ -9,9 +9,8 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 
-// import { SSRPass } from 'screen-space-reflections'
-// import * as POSTPROCESSING from 'postprocessing'
-// import { SSRPass } from '~/webgl/utils/SSR'
+import { SSREffect } from 'screen-space-reflections'
+import * as POSTPROCESSING from 'postprocessing'
 
 
 import { uniforms } from '~/webgl/shaders/uniforms'

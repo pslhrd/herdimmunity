@@ -3,13 +3,15 @@
 
 varying vec2 vUv;
 uniform float time;
+uniform float uAlpha;
 uniform sampler2D matcap;
 uniform sampler2D roughness;
+uniform sampler2D grunge;
 varying vec3 vWorldNormal;
 varying vec3 vViewDirection;
 varying vec3 vPosition;
 varying vec3 vWorldPosition;
-
+varying vec3 vNormal;
 
 // NOISE FUNCTION
 float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
@@ -55,9 +57,10 @@ void main() {
   // DIFFUSE
   vec3 diffuse = vec3(0.0);
 
+  vec3 grungeTex = texture2D(grunge, vUv).rgb;
   // MATCAP
   highp vec2 muv = vec2(viewMatrix * vec4(normalize(vWorldNormal), 0))*0.5+vec2(0.5,0.5);
-  vec3 matcapTexture = texture2D(matcap, vec2(muv.x, 1.0-muv.y)).rgb;
+  vec3 matcapTexture = texture2D(matcap, vec2(muv.x , 1.0-muv.y)).rgb;
 
   // NOISE ANIMATIONS
   float n = noise(vPosition * 4. + (time / 10.));
@@ -78,13 +81,14 @@ void main() {
 
   // ROUGHNESS
   vec3 roughnessTexture = texture2D(roughness, vUv).rgb;
-  diffuse = blendSoftLight(diffuse, (roughnessTexture * 0.2));
+  diffuse = blendSoftLight(diffuse, (roughnessTexture * 0.1));
 
   // GROUND FOG
   vec3 groundFog = vec3(0., 0., 0.);
   diffuse = mix(groundFog, diffuse.rgb, (vWorldPosition.y * 0.9));
-
-  gl_FragColor = vec4(diffuse, 1.);
+  
+  if(uAlpha <=0.001) discard;
+  gl_FragColor = vec4(diffuse, uAlpha);
 
   // #include <fog_fragment>
 

@@ -3,6 +3,7 @@
 
 varying vec2 vUv;
 uniform float time;
+uniform float uAlpha;
 uniform sampler2D matcap;
 uniform sampler2D roughness;
 varying vec3 vWorldNormal;
@@ -60,12 +61,12 @@ void main() {
   vec3 matcapTexture = texture2D(matcap, vec2(muv.x, 1.0-muv.y)).rgb;
 
   // NOISE ANIMATIONS
-  // float n = noise(vPosition * 4. + (time / 10.));
-  // vec3 colorA = vec3(0.455,0.455,0.455);
-  // vec3 colorB = vec3(0.855,0.847,0.824);
-  // vec3 sum = mix(colorA, colorB, n);
+  float n = noise(vPosition * 4. + (time / 10.));
+  vec3 colorA = vec3(0.78);
+  vec3 colorB = vec3(0.);
+  vec3 sum = mix(colorA, colorB, n);
 
-  // diffuse = blendScreen(sum, matcapTexture * 0.3);
+  diffuse = diffuse * matcapTexture * 0.1;
 
   // RIM LIGHT
 	vec3 rimColor = vec3(0.75); // vec3(0.9, 1., 0.4);
@@ -84,7 +85,8 @@ void main() {
   vec3 groundFog = vec3(0., 0., 0.);
   diffuse = mix(groundFog, diffuse.rgb, (vWorldPosition.y * 0.9));
 
-  gl_FragColor = vec4(diffuse, 1.);
+  if(uAlpha <=0.001) discard;
+  gl_FragColor = vec4(diffuse, uAlpha);
 
   // #include <fog_fragment>
 

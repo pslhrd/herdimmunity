@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { App } from '~/webgl/index'
 import { store } from '~/store'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { lerp } from '~/webgl/utils/Math'
+import { lerp, dampPrecise, damp, clampedMap } from '~/webgl/utils/Math'
 export class Camera {
   constructor(_options) {
     this.app = new App()
@@ -10,12 +10,34 @@ export class Camera {
     this.targetElement = this.app.targetElement
     this.config = this.app.config
     this.debug = this.app.debug
+    this.time = this.app.time
+    this.mouse = this.app.mouse
 
     this.params = {
-      Mode: 'debug',
+      Mode: 'default',
       Camera: {x: 0, y: 2, z: 2},
+      Rotation: {x:-0.16144991535340858, y:0, z:0},
       LookAt: {x: -0, y: 1, z: 0}
     }
+
+    this.useMouse = true;
+
+    this.basePos = new THREE.Vector3()
+		this.baseQt = new THREE.Quaternion()
+
+		this.camTarget = null;
+		this.camTargetPos = new THREE.Vector3()
+		this.camTargetQt = new THREE.Quaternion()
+
+		this.mouseInfluence = 0.05;
+		this.mx = 0;
+		this.my = 0;
+		this.dx = 0;
+
+		this.followBarMult = 0;
+		this.offsetX = 0;
+		this.offsetY = 0;
+		this.rotZ = 0;
     
     this.setCamera()
     this.setModes()
@@ -28,6 +50,7 @@ export class Camera {
     this.instance = new THREE.PerspectiveCamera(25, store.width / store.height, 0.1, 150)
     this.currentCamera = this.instance
     this.instance.position.set(this.params.Camera.x, this.params.Camera.y, this.params.Camera.z)
+    this.instance.rotation.set(this.params.Rotation.x, this.params.Rotation.y, this.params.Rotation.z)
     // this.instance.lookAt(0,0,0)
     this.scene.add(this.instance)
   }
@@ -92,22 +115,38 @@ export class Camera {
   }
 
   update() {
+    const dt = this.time.delta
+    // IF DEBUG
     this.modes.debug.orbitControls.update()
-
     this.currentCamera = this.modes[this.params.Mode].instance
-    // Apply coordinates
     this.instance.position.copy(this.modes[this.params.Mode].instance.position)
     this.instance.quaternion.copy(this.modes[this.params.Mode].instance.quaternion)
-    this.instance.updateMatrixWorld() // To be used in projection
-    
-    // Lerp Rotation
-    let targetX = store.mouseX * .0002;
-    let targetY = store.mouseY * .0001;
+    this.instance.updateMatrixWorld()
 
-    // this.currentCamera.rotation.y += 0.05 * ( targetX - this.currentCamera.rotation.y );
-    // this.currentCamera.rotation.x += 0.05 * ( targetY - this.currentCamera.rotation.x );
+    // let x = clampedMap(this.currentCamera.position.x, 0, 10, -1, 1);
 
-    // this.currentCamera.position.y += 0.05 * ( targetY - this.currentCamera.position.y );
+    // console.log(x)
+		// const txEase = this.useMouse ? 0.07 : 0.14;
+		// this.offsetX = damp(this.offsetX, x * 0.6, txEase, dt);
+		// this.currentCamera.translateX(this.offsetX);
+
+    // // MOUSEMOVE
+		// const mx = this.useMouse ? this.mouse.scene.x * this.mouseInfluence : 0;
+		// const my = this.useMouse ? this.mouse.scene.y * this.mouseInfluence : 0;
+
+
+    // let pmx = this.mx;
+    // this.mx = dampPrecise(this.mx, mx * 0.4, 0.08, dt, 0.01);
+    // this.my = dampPrecise(this.my, my * 0.2, 0.08, dt, 0.01);
+
+		// if (this.mx !== 0 && this.my !== 0) {
+		// 	this.currentCamera.translateX(this.mx);
+		// 	this.currentCamera.rotateY(this.mx * 0.1);
+		// 	this.currentCamera.rotateX(this.my * -0.1);
+		// 	this.currentCamera.translateY(this.my);
+		// 	this.dx = damp(this.dx, (this.mx - pmx) * 0.8, 0.1, dt);
+		// 	this.currentCamera.rotateZ(this.dx);
+		// }
   }
 
   destroy() {
