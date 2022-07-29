@@ -22,7 +22,7 @@
       <div class="content-page merch" v-if="store.currentState === 3">
         <div class="merch-content">
           <span class="sub">Coming Soon</span>
-          <span class="title">Black Sheep Teeshirt</span>
+          <span class="title">Mesh jersey</span>
         </div>
       </div>
     </transition>

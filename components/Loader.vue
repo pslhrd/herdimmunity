@@ -18,8 +18,8 @@
 
 <style lang="scss" scoped>
 .loader {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   position: fixed;
   background-color: #20201D;
   z-index: 25;
