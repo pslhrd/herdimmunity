@@ -33,7 +33,7 @@ export default class MerchMaterial extends THREE.ShaderMaterial {
     },
 
     this.normalMap = this.uniforms.normalMap.value = this.resources.items.teeNormal
-    this.normalScale = this.uniforms.normalScale.value = new THREE.Vector2(4);
+    this.normalScale = this.uniforms.normalScale.value = new THREE.Vector2(4, 4);
 
     this.vertexShader = vs;
     this.fragmentShader = fs;

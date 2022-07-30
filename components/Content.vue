@@ -1,38 +1,49 @@
 <template>
   <section class="content">
 
-    <transition name="slide-fade">
+    <transition name="slide" :duration="910">
       <div class="content-page homepage" v-if="store.currentState === 1">
-        <div class="homepage-cta">
+        <div class="homepage-cta first">
           <a href="https://bfan.link/herd-immunity" target="_blank"><button>Listen to the mixtape</button></a>
         </div>
       </div>
     </transition>
 
-    <transition name="slide-fade">
+    <transition name="slide" :duration="910">
       <div class="content-page blacksheep" v-if="store.currentState === 2">
         <div class="blacksheep-content">
-          <span class="title">Black sheep oath</span>
-          <span class="paragraph">I won't let the feeling of not wanting to be alone stop me from being great. I will continue to make things, even when my heart is heavy, even when I can feel sadness putting pressure on the back of my eyes.</span>
+          <div class="index">
+            <span class="index-text">ABOUT</span>
+            <div class="index-background"></div>
+          </div>
+          <span class="title first">Black sheep oath</span>
+          <span class="paragraph second">I won't let the feeling of not wanting to be alone stop me from being great. I will continue to make things, even when my heart is heavy, even when I can feel sadness putting pressure on the back of my eyes.</span>
         </div>
       </div>
     </transition>
 
-    <transition name="slide-fade">
+    <transition name="slide" :duration="910">
       <div class="content-page merch" v-if="store.currentState === 3">
         <div class="merch-content">
-          <span class="sub">Coming Soon</span>
-          <span class="title">Mesh jersey</span>
+          <div class="index">
+            <span class="index-text">MERCH</span>
+            <div class="index-background"></div>
+          </div>
+          <span class="title first">Coming Soon</span>
         </div>
       </div>
     </transition>
 
-    <transition name="slide-fade">
+    <transition name="slide" :duration="910">
       <div class="content-page video" v-if="store.currentState === 4">
         <div class="video-content">
-          <span class="title">YOFC OFFICIAL VIDEO OUT NOW</span>
-          <div class="video-cta">
-            <button>watch on youtube</button>
+          <div class="index">
+            <span class="index-text">VIDEO</span>
+            <div class="index-background"></div>
+          </div>
+          <span class="title first">YOFC OFFICIAL VIDEO</span>
+          <div class="video-cta second">
+            <button>COMING SOON</button>
           </div>
         </div>
       </div>
@@ -49,6 +60,51 @@ import { store } from '~/store'
 
 
 <style lang="scss" scoped>
+  
+  span {
+    display: block;
+  }
+
+  .first, .second {
+    display: block;
+  }
+
+  .index {
+    position: relative;
+    display: flex;
+
+    .wrapper {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+    }
+    &-text {
+      overflow: hidden;
+      display: inline-block;
+      width: auto;
+      position: relative;
+      z-index: 2;
+      color: rgb(255, 255, 255);
+      padding: 2px 4px 2px 4px;
+      font-family: 'Pixter Granular';
+      line-height: 14px;
+      font-size: 14px;
+      margin-bottom: -2px;
+    }
+    &-background {
+      display:inline-block;
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.201);
+
+      transform-origin: left center;
+    }
+  }
+
   .content {
     position: fixed;
     color: white;
@@ -76,47 +132,16 @@ import { store } from '~/store'
         height: 100%;
       }
       position: absolute;
-      bottom: 40px;
-      button {
-        text-align: center;
-        width: 230px;
-        height: 50px;
-        border: 1px solid white;
-        border-radius: 4px;
-        font-size: 13px;
-        text-transform: uppercase;
+      bottom: 60px;
+
+      @include desktop {
+        bottom: 125px;
       }
-    }
-  }
-
-  .video {
-    &-content {
-      position: absolute;
-      bottom: 40px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .title {
-      display: block;
-      font-family: 'BT Brik';
-      font-size: 24px;
-      margin-bottom: 20px;
-      width: 200px;
-      text-align: center;
-    }
-    
-    &-cta {
       button {
-        display: block;
-        font-family: 'Pixter Granular';
         text-align: center;
         width: 230px;
         height: 50px;
         border: 1px solid white;
-        border-radius: 4px;
         font-size: 13px;
         text-transform: uppercase;
       }
@@ -127,13 +152,28 @@ import { store } from '~/store'
     text-align: center;
     &-content {
       position: absolute;
-      bottom: 40px;
+      bottom: 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+
+      @include desktop {
+        bottom: 125px;
+      }
     }
+
+
     .title {
       display: block;
       font-family: 'BT Brik';
       font-size: 28px;
-      margin-bottom: 20px;
+
+      @include desktop {
+        text-align: center;
+        font-size: 80px;
+        width: 500px;
+      }
     }
 
     .paragraph {
@@ -143,6 +183,11 @@ import { store } from '~/store'
       line-height: 1.25em;
       width: 325px;
       color: rgb(115, 115, 115);
+
+      @include desktop {
+        text-align: center;
+        width: 350px;
+      }
     }
   }
 
@@ -150,8 +195,16 @@ import { store } from '~/store'
 
     &-content {
       position: absolute;
-      bottom: 40px;
+      bottom: 60px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+
+      @include desktop {
+        bottom: 125px;
+      }
     }
     .sub {
       display: block;
@@ -159,7 +212,6 @@ import { store } from '~/store'
       font-size: 13px;
       line-height: 1.25em;
       color: rgb(115, 115, 115);
-      margin-bottom: 10px;
       text-transform: uppercase;
     }
 
@@ -168,24 +220,97 @@ import { store } from '~/store'
       font-family: 'BT Brik';
       font-size: 28px;
       width: 325px;
+
+      @include desktop {
+        font-size: 46px;
+        width: 500px;
+      }
     }
   }
 
-  .slide-fade-enter-active {
-    transition: all 0.3s ease-out;
+  .video {
+    &-content {
+      position: absolute;
+      bottom: 60px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+
+      @include desktop {
+        bottom: 125px;
+      }
+    }
+
+    .title {
+      display: block;
+      font-family: 'BT Brik';
+      font-size: 24px;
+      width: 200px;
+      text-align: center;
+
+      @include desktop {
+        font-size: 46px;
+        width: 400px;
+      }
+    }
+    
+    &-cta {
+      button {
+        display: block;
+        font-family: 'Pixter Granular';
+        text-align: center;
+        width: 230px;
+        height: 50px;
+        border: 1px solid white;
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+    }
   }
 
-  .slide-fade-leave-active {
-    transition: all 0.3s ease-out;
+
+  .slide-enter-active .first, {
+    transition: all 0.7s $expo 0.14s;
+  }
+  .slide-enter-active .second, {
+    transition: all 0.7s $expo 0.21s;
   }
 
-  .slide-fade-enter-from {
+  .slide-enter-active .index-background {
+    transition: all 0.7s $expo 0.07s;
+  }
+  .slide-enter-active .index-text {
+    transition: all 0.7s $expo 0.14s;
+  }
+
+  .slide-leave-active {
+    transition: opacity 0.3s ease-out;
+  } 
+
+  .slide-enter-from .first,
+  .slide-enter-from .second {
     opacity: 0;
-    transform: translateY(20px)
+    transform: translateY(100%);
+    filter: blur(5px);
+
+    @include desktop {
+      transform: translateY(75px);
+      filter: blur(5px);
+    }
   }
 
-  .slide-fade-leave-to {
+  .slide-enter-from .index-background {
+    transform: scaleX(0);
+    filter: blur(5px);
+  }
+
+  .slide-enter-from .index-text {
+    transform: translateY(100%);
+    filter: blur(5px);
+  }
+  .slide-leave-to {
     opacity: 0;
-    transform: translateY(-20px)
   }
 </style>

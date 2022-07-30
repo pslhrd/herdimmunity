@@ -42,8 +42,8 @@ export class Renderer {
 
     // Renderer
     this.instance = new THREE.WebGLRenderer({
-        alpha: false,
-        antialias: false
+      alpha: false,
+      antialias: false
     })
     this.instance.domElement.style.position = 'absolute'
     this.instance.domElement.style.top = 0
@@ -105,6 +105,11 @@ export class Renderer {
     
     this.postProcessingPass = new ShaderPass(this.processingShader)
     this.postProcess.composer = new EffectComposer(this.instance, this.renderTarget)
+
+    this.postProcess.composer.renderToScreen = true
+
+    console.log(this.renderTarget)
+
     this.postProcess.composer.setSize(store.width, store.height)
     this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
 
@@ -116,9 +121,6 @@ export class Renderer {
 			frame: 0,
       value: this.postProcess.composer.passes[1].uniforms.ditherOffset.value
     }
-  
-
-    console.log(this.postProcess.composer.passes[1].uniforms.ditherOffset.value)
   }
 
 
@@ -199,7 +201,7 @@ export class Renderer {
   }
 
   update() {
-    if(this.usePostProcess & store.assetsLoaded) {
+    if(this.usePostProcess && store.assetsLoaded) {
       this.postProcess.composer.render()
       this.updateNoise(this.noises.dither)
     } else {

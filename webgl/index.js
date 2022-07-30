@@ -41,8 +41,8 @@ export class App {
     this.setScene()
     this.setStats()
     this.setCamera()
-    this.setWorld()
     this.setRenderer()
+    this.setWorld()
     this.setSceneEvents()
     
     watch(() => store.height + store.width, () => {

@@ -47,11 +47,16 @@ onMounted(() => {
     width: 100%;
     text-align: center;
     font-family: 'BT Brik';
-    padding-top: 40px;
-    font-size: 24px;
+    padding-top: 25px;
+    font-size: 20px;
     z-index: 1;
     color: $lightgrey;
     user-select: none;
+
+    @include desktop {
+      padding-top: 40px;
+      font-size: 26px;
+    }
 
     span {
       display: block;

@@ -23,11 +23,11 @@ export class sceneEvents {
     watch(() => store.currentState, (value, oldValue) => {
       this.moveCamera(store.currentState)
 
-      if(value === 1 & oldValue != 2) {
-        this.enterHome()
+      if(value === 1 && oldValue != 2) {
+       this.enterHome()
       }
-      if(value === 2 & oldValue != 1) {
-        this.enterBlackSheep()
+      if(value === 2 && oldValue != 1) {
+       this.enterBlackSheep()
       }
 
       if(value === 3) {
@@ -36,10 +36,10 @@ export class sceneEvents {
       if(value === 4) {
         this.enterVideo()
       }
-      if(oldValue === 1 & value !=2) {
+      if(oldValue === 1 && value !=2) {
         this.leaveHome()
       }
-      if(oldValue === 2 & value != 1) {
+      if(oldValue === 2 && value != 1) {
         this.leaveBlackSheep()
       }
       if(oldValue === 3) {
@@ -103,7 +103,9 @@ export class sceneEvents {
   }
 
   enterMerch() {
-    gsap.to(this.world.Teeshirt.material.uniforms.uAlpha, {value: 1, duration:1, ease:'power2.out'})
+    gsap.from(this.world.Teeshirt.scale, {x:0.7, y:0.7, z:0.7, duration:2, ease:'power3.out'}, 1)
+    gsap.from(this.world.Teeshirt.rotation, {y:2, duration:2, ease:'power3.out'}, 1)
+    gsap.to(this.world.Teeshirt.material.uniforms.uAlpha, {value: 1, duration:1, ease:'power3.out'}, 1)
   }
   leaveMerch(){
     gsap.to(this.world.Teeshirt.material.uniforms.uAlpha, {value: 0, duration:1, ease:'power2.out'})
@@ -119,7 +121,8 @@ export class sceneEvents {
   }
 
   sceneIntro() {
-    gsap.from(this.camera.position, {x:0, y:4, z:2, duration:4, ease:'power3.inOut'}, 1)
+    console.log(this.positions)
+    gsap.from(this.camera.position, {x:0, y:1.4, z:18, duration:4, ease:'power3.inOut'}, 1)
     gsap.to(this.camera.rotation, {x:this.positions[0].rotation.x, y:this.positions[0].rotation.y, z:this.positions[0].rotation.z, duration:4, ease:'power3.inOut'}, 1)
   }
 }

@@ -52,7 +52,7 @@ void main() {
 		reflectedLight.indirectSpecular;
 
   // #include <output_fragment>
-    #include <normal_fragment_maps>
+  #include <normal_fragment_maps>
 
   if(uAlpha <=0.001) discard;
   gl_FragColor = vec4(color, uAlpha);

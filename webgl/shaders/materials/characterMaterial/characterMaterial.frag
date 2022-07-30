@@ -63,15 +63,15 @@ void main() {
   // NOISE ANIMATIONS
   float n = noise(vPosition * 4. + (time / 10.));
   vec3 colorA = vec3(0.78);
-  vec3 colorB = vec3(0.);
+  vec3 colorB = vec3(0.53);
   vec3 sum = mix(colorA, colorB, n);
 
-  diffuse = diffuse * matcapTexture * 0.1;
+  diffuse = sum * matcapTexture * 0.2;
 
   // RIM LIGHT
 	vec3 rimColor = vec3(0.75); // vec3(0.9, 1., 0.4);
-	float rimLightPower = 1.6;
-	float rimLightStrength = .19;
+	float rimLightPower = 1.5;
+	float rimLightStrength = .35;
 	float rightLight = rimLightPower * abs( dot( vWorldNormal, normalize( vViewDirection ) ) );
 	rightLight = 1. - smoothstep(.0, 1., rightLight );
 
@@ -82,12 +82,12 @@ void main() {
   diffuse = blendSoftLight(diffuse, (roughnessTexture * 0.15));
 
   // GROUND FOG
-  vec3 groundFog = vec3(0., 0., 0.);
-  diffuse = mix(groundFog, diffuse.rgb, (vWorldPosition.y * 0.9));
+  // vec3 groundFog = vec3(0., 0., 0.);
+  // diffuse = mix(groundFog, diffuse.rgb, (vWorldPosition.y * 0.9));
 
   if(uAlpha <=0.001) discard;
   gl_FragColor = vec4(diffuse, uAlpha);
 
-  // #include <fog_fragment>
+  #include <fog_fragment>
 
 }

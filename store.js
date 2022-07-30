@@ -9,6 +9,7 @@ export const store = reactive({
 
   menuOpen: false,
   sceneChanged: false,
+  sceneTransition: false,
 
   sound: false,
 

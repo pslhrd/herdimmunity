@@ -26,3 +26,7 @@ $breakpoints: (
 @mixin small-mobile {
   @media (max-width: 500px) { @content; }
 }
+
+@mixin desktop {
+  @media (min-width: 800px) { @content; }
+}

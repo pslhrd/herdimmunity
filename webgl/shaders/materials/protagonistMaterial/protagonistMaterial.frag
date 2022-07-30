@@ -64,7 +64,7 @@ void main() {
 
   // NOISE ANIMATIONS
   float n = noise(vPosition * 4. + (time / 10.));
-  vec3 colorA = vec3(0.239,0.239,0.239);
+  vec3 colorA = vec3(0.45);
   vec3 colorB = vec3(0.09,0.09,0.09);
   vec3 sum = mix(colorA, colorB, n);
 
@@ -84,12 +84,12 @@ void main() {
   diffuse = blendSoftLight(diffuse, (roughnessTexture * 0.1));
 
   // GROUND FOG
-  vec3 groundFog = vec3(0., 0., 0.);
-  diffuse = mix(groundFog, diffuse.rgb, (vWorldPosition.y * 0.9));
+  // vec3 groundFog = vec3(0., 0., 0.);
+  // diffuse = mix(groundFog, diffuse.rgb, (vWorldPosition.y * 0.9));
   
   if(uAlpha <=0.001) discard;
   gl_FragColor = vec4(diffuse, uAlpha);
 
-  // #include <fog_fragment>
+  #include <fog_fragment>
 
 }

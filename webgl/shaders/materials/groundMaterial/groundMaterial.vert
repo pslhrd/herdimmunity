@@ -1,24 +1,47 @@
+varying vec3 vViewPosition;
+
+#include <common>
+#include <uv_pars_vertex>
+#include <uv2_pars_vertex>
+#include <displacementmap_pars_vertex>
+#include <color_pars_vertex>
 #include <fog_pars_vertex>
+#include <normal_pars_vertex>
+#include <morphtarget_pars_vertex>
+#include <skinning_pars_vertex>
+#include <shadowmap_pars_vertex>
+#include <logdepthbuf_pars_vertex>
+#include <clipping_planes_pars_vertex>
 
-// uniform mat4 modelMatrix;
-// uniform mat4 projectionMatrix;
-// uniform mat4 viewMatrix;
-// uniform mat3 normalMatrix;
-// uniform vec3 cameraPosition;
-uniform mat3 uMapTransform;
-uniform mat4 uMatrix;
 
-out vec2 vUv;
-out vec4 vCoord;
-out vec3 vNormal;
-out vec3 vToEye;
+uniform mat4 textureMatrix;
+varying vec4 vCoord;
+varying vec3 vToEye;
+
 
 void main() {
-  vUv = (uMapTransform * vec3(uv, 1.0)).xy;
-  vCoord = uMatrix * vec4(position, 1.0);
-  vNormal = normalMatrix * normal;
-  vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-  vToEye = cameraPosition - worldPosition.xyz;
-  vec4 mvPosition = viewMatrix * worldPosition;
-  gl_Position = projectionMatrix * mvPosition;
+	#include <uv_vertex>
+	#include <uv2_vertex>
+	#include <color_vertex>
+	#include <morphcolor_vertex>
+	#include <beginnormal_vertex>
+	#include <morphnormal_vertex>
+	#include <skinbase_vertex>
+	#include <skinnormal_vertex>
+	#include <defaultnormal_vertex>
+	#include <normal_vertex>
+	#include <begin_vertex>
+	#include <project_vertex>
+
+  vCoord = textureMatrix * vec4( position, 1.0 ); 
+  vToEye = cameraPosition - (modelMatrix * vec4(transformed, 1.0)).xyz;
+
+	#include <logdepthbuf_vertex>
+	#include <clipping_planes_vertex>
+
+  vViewPosition = - mvPosition.xyz;
+
+	#include <worldpos_vertex>
+	#include <shadowmap_vertex>
+	#include <fog_vertex>
 }

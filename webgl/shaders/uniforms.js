@@ -1,4 +1,4 @@
-import { Vector4 } from 'three'
+import { Vector4, Matrix4 } from 'three'
 
 const uniforms = {
   time: { value: 0 },

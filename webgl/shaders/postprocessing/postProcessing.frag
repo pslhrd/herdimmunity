@@ -96,7 +96,7 @@ void main() {
 
   // TEXTURE
   vec3 grungeTex = texture2D(grunge, vUv).rgb;
-  diffuse = blendScreen(diffuse, grungeTex * 0.2); 
+  diffuse = blendScreen(diffuse, grungeTex * 0.3); 
 
 
 	// Dithering

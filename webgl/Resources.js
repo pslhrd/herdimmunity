@@ -94,6 +94,7 @@ export class Resources {
         data = new THREE.Texture(_data)
       }
       data.needsUpdate = true
+      data.flipY = false
     }
 
     this.items[_resource.name] = data

@@ -5,9 +5,9 @@
     <Loader />
     <!-- <Introduction />  -->
     <Navigation />
-
     <Content />
     <WebGL />
+    <Body ontouchstart="" />
   </main>
 </template>
 

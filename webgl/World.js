@@ -10,6 +10,7 @@ import TextMaterial from '~/webgl/shaders/materials/textMaterial/textMaterial'
 import CharacterMaterial from '~/webgl/shaders/materials/characterMaterial/characterMaterial'
 import GroundMaterial from '~/webgl/shaders/materials/groundMaterial/groundMaterial'
 
+import { Reflector } from '~/webgl/components/Reflector'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
 
 export class World {
@@ -35,9 +36,8 @@ export class World {
     this.MerchMaterial = MerchMaterial.use();
     this.CharacterMaterial = CharacterMaterial.use();
     this.ProtagonistMaterial = ProtagonistMaterial.use();
-    this.TextMaterial = TextMaterial.use();
-    this.GroundMaterial = GroundMaterial.use();
-    // this.scene.fog = new THREE.Fog(0x000000, 12, 16)
+    this.TextMaterial = TextMaterial.use();;
+    this.scene.fog = new THREE.Fog(0x000000, 7, 15)
   }
 
   setScene() {
@@ -50,12 +50,13 @@ export class World {
       }
 
       if (element.name === 'GROUND') {
+        // element.material = this.GroundMaterial
         this.Ground = element
       }
 
       if (element.name === 'VIDEO') {
         const videoTexture = new THREE.VideoTexture(this.video)
-        element.material = new THREE.MeshBasicMaterial( {map:videoTexture, transparent: true, opacity:0} );
+        element.material = new THREE.MeshBasicMaterial( {map:videoTexture, transparent: true} );
         element.material.needsUpdate = true;
         this.video3D = element
       }
@@ -63,11 +64,6 @@ export class World {
       if (element.name === 'PROTAGONIST') {
         this.Protagonist = element
         element.material = this.ProtagonistMaterial
-      }
-
-      if (element.name === '1') {
-        console.log(element.position)
-        console.log(element.rotation)
       }
 
       if (element.name === 'TEXT') {
@@ -82,9 +78,27 @@ export class World {
       
     })
     
-    const directional = new THREE.DirectionalLight()
-    const ambientlight = new THREE.AmbientLight(0xffffff, 0.2)
-    this.scene.add(ambientlight, directional) 
+    const directional = new THREE.DirectionalLight(0xffffff, 1)
+    directional.position.set( 10, 5, 10)
+    const helper = new THREE.DirectionalLightHelper( directional, 5 );
+    const ambientlight = new THREE.AmbientLight(0xffffff, 1)
+    this.scene.add(ambientlight)
+
+    console.log(this.Ground)
+    const geometry = new THREE.PlaneBufferGeometry(20, 20)
+    const mirror = new Reflector(geometry, {
+      clipBias: 0.003,
+      textureWidth: 1024 * this.config.pixelRatio,
+      textureHeight: 1024 * this.config.pixelRatio,
+      color: 0x232323,
+      recursion: 1
+    })
+    mirror.rotateX(-Math.PI / 2);
+    mirror.position.y = 0;
+    mirror.material.transparent = true;
+    mirror.material.alpha = 1;
+  
+    this.scene.add(mirror);
   }
 
   setVideoPlayer() {
