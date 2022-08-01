@@ -4,11 +4,8 @@ import { store } from '~/store'
 export function useResize(canvas) {
 
   function update() {
-    store.width = window.innerWidth
-    store.height = window.innerHeight
-
-    store.canvasHeight = canvas.offsetHeight
-    store.canvasWidth = canvas.offsetWidth
+    store.width = canvas.offsetWidth
+    store.height = canvas.offsetHeight
 
   }
 
