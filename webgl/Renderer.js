@@ -45,7 +45,7 @@ export class Renderer {
     // Renderer
     this.instance = new THREE.WebGLRenderer({
       // canvas: this.canvas,
-      alpha: false,
+      alpha: true,
       antialias: false
     })
     this.instance.domElement.style.position = 'absolute'

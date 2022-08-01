@@ -9,14 +9,14 @@
     <Meta property="og:title" content="Herd Immunity" />
     <Meta property="og:site_name" content="Herd Immunity" />
     <Meta property="og:description" content="Sean Leon - Herd Immunity Mixtape out now." />
-    <Meta property="og:image" content="https://herdimmunity.info/share.png" />
+    <Meta property="og:image" content="http://herdimmunity.info/share.jpg" />
 
     <Meta name="twitter:card" content="summary" />
     <Meta name="twitter:site" content="@seanleon" />
     <Meta name="twitter:url" content="https://herdimmunity.info" />
     <Meta name="twitter:title" content="HERD IMMUNITY" />
     <Meta name="twitter:description" content="Sean Leon - Herd Immunity Mixtape out now." />
-    <Meta name="twitter:image" content="https://herdimmunity.info/share.jpg" />
+    <Meta name="twitter:image" content="http://herdimmunity.info/share.jpg" />
 
     <Link rel="icon" sizes="192x192" href="/favicon.ico" />
     <Link rel="apple-touch-icon" href="/icon_192.png" />
