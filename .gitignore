@@ -4,6 +4,7 @@ node_modules
 .nitro
 .cache
 .blend1
+.blend
 .output
 .env
 dist
