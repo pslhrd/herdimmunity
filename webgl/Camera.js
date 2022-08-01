@@ -31,6 +31,7 @@ export class Camera {
 
     this.VecA = new THREE.Vector3(0);
     this.VecB = new THREE.Vector2(0);
+    this.VecC = new THREE.Vector3(0);
     this.lerpSpeed = 0.01;
     
     this.setCamera()
