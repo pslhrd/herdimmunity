@@ -12,10 +12,10 @@
     <transition name="slide" :duration="910">
       <div class="content-page blacksheep" v-if="store.currentState === 2">
         <div class="blacksheep-content">
-          <div class="index">
+          <!-- <div class="index">
             <span class="index-text">ABOUT</span>
             <div class="index-background"></div>
-          </div>
+          </div> -->
           <span class="title first">Black sheep oath</span>
           <span class="paragraph second">I won't let the feeling of not wanting to be alone stop me from being great. I will continue to make things, even when my heart is heavy, even when I can feel sadness putting pressure on the back of my eyes.</span>
         </div>
@@ -25,11 +25,16 @@
     <transition name="slide" :duration="910">
       <div class="content-page merch" v-if="store.currentState === 3">
         <div class="merch-content">
-          <div class="index">
+          <!-- <div class="index">
             <span class="index-text">MERCH</span>
             <div class="index-background"></div>
-          </div>
+          </div> -->
           <span class="title first">Coming Soon</span>
+          <div class="merch-btn second">
+            <div class="button" @click="store.currentMerch = 1" :class="{active: store.currentMerch === 1}">1</div>
+            <div class="button" @click="store.currentMerch = 2" :class="{active: store.currentMerch === 2}">2</div>
+            <div class="button" @click="store.currentMerch = 3" :class="{active: store.currentMerch === 3}">3</div>
+          </div>
         </div>
       </div>
     </transition>
@@ -37,10 +42,10 @@
     <transition name="slide" :duration="910">
       <div class="content-page video" v-if="store.currentState === 4">
         <div class="video-content">
-          <div class="index">
+          <!-- <div class="index">
             <span class="index-text">VIDEO</span>
             <div class="index-background"></div>
-          </div>
+          </div> -->
           <span class="title first">YOFC OFFICIAL VIDEO</span>
           <div class="video-cta second">
             <button>COMING SOON</button>
@@ -130,9 +135,16 @@ import { store } from '~/store'
         display: block;
         width: 100%;
         height: 100%;
+
+        &:hover {
+          button {
+            border: 2px solid rgba(255, 255, 255, 0.197);
+          }
+        }
       }
       position: absolute;
       bottom: 60px;
+      
 
       @include desktop {
         bottom: 125px;
@@ -141,9 +153,10 @@ import { store } from '~/store'
         text-align: center;
         width: 230px;
         height: 50px;
-        border: 1px solid white;
+        border: 2px solid white;
         font-size: 13px;
         text-transform: uppercase;
+        transition: all 0.3s $hover;
       }
     }
   }
@@ -192,6 +205,33 @@ import { store } from '~/store'
   }
 
   .merch {
+
+    &-btn {
+      display: flex;
+      gap: 20px;
+      .button {
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Pixter Granular';
+        width: 50px;
+        height: 50px;
+        background-color: rgba(255, 255, 255, 0.15);
+        transition: all 0.3s $hover;
+        border: 2px solid rgba(255, 255, 255, 0);
+
+        &:hover {
+          cursor: pointer;
+          border: 2px solid rgba(255, 255, 255, 0.253);
+        }
+
+        &.active {
+          color: black;
+          background-color: white;
+        }
+      }
+    }
 
     &-content {
       position: absolute;
@@ -263,7 +303,7 @@ import { store } from '~/store'
         text-align: center;
         width: 230px;
         height: 50px;
-        border: 1px solid white;
+        border: 2px solid white;
         font-size: 13px;
         text-transform: uppercase;
       }

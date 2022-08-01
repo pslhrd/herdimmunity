@@ -17,5 +17,8 @@ export const store = reactive({
   toLoad: 0,
   loaded: 0,
 
-  currentState: 1
+  worldSet: false,
+
+  currentState: 1,
+  currentMerch: 1
 })

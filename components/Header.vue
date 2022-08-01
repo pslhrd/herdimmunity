@@ -4,37 +4,35 @@
     <Meta name="description" content=" HERD IMMUNITY " />
     <Meta name="theme-color" content="#4285f4" />
 
-    <Meta property="og:url" content="https://nuxt" />
+    <Meta property="og:url" content="https://herdimmunity.info" />
     <Meta property="og:type" content="website" />
-    <Meta property="og:title" content="Content Title" />
-    <Meta property="og:site_name" content="Site Name" />
-    <Meta property="og:description" content="Description Here" />
-    <Meta property="og:image" content="https://example.com/share.png" />
+    <Meta property="og:title" content="Herd Immunity" />
+    <Meta property="og:site_name" content="Herd Immunity" />
+    <Meta property="og:description" content="Sean Leon - Herd Immunity Mixtape out now." />
+    <Meta property="og:image" content="https://herdimmunity.info/share.png" />
 
     <Meta name="twitter:card" content="summary" />
-    <Meta name="twitter:site" content="@site_account" />
-    <Meta name="twitter:url" content="https://example.com/page.html" />
-    <Meta name="twitter:title" content="Content Title" />
-    <Meta name="twitter:description" content="Content description less than 200 characters" />
-    <Meta name="twitter:image" content="https://example.com/share.jpg" />
+    <Meta name="twitter:site" content="@seanleon" />
+    <Meta name="twitter:url" content="https://herdimmunity.info" />
+    <Meta name="twitter:title" content="HERD IMMUNITY" />
+    <Meta name="twitter:description" content="Sean Leon - Herd Immunity Mixtape out now." />
+    <Meta name="twitter:image" content="https://herdimmunity.info/share.jpg" />
 
     <Link rel="icon" sizes="192x192" href="/favicon.ico" />
     <Link rel="apple-touch-icon" href="/icon_192.png" />
   </Head>
 
-  <header>
-    <span @click="store.currentState = 1">HERD IMMUNITY</span>
-  </header>
+  <transition name="header">
+    <header v-if="store.assetsLoaded">
+      <span @click="store.currentState = 1">HERD IMMUNITY</span>
+    </header>
+  </transition>
 </template>
 
 <script setup>
 import { store } from '~/store'
 import { onMounted } from 'vue'
 import gsap from 'gsap'
-
-onMounted(() => {
-  // gsap.fromTo('header span', {yPercent:-100, opacity:0}, {yPercent:0, opacity:1, duration:1, ease:'expo.out'}, 0.93)
-})
 </script>
 
 <style lang="scss" scoped>
@@ -65,5 +63,15 @@ onMounted(() => {
         cursor: pointer;
       }
     }
+  }
+
+  .header-enter-active {
+    transition: all 1s $hover 1s;
+  }
+
+  .header-enter-from {
+    opacity: 0;
+    transform: translateY(-100%);
+    filter: blur(5px);
   }
 </style>

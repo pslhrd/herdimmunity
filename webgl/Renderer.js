@@ -38,7 +38,7 @@ export class Renderer {
   }
 
   setInstance() {
-    this.clearColor = '#000000'
+    this.clearColor = '#121212'
 
     // Renderer
     this.instance = new THREE.WebGLRenderer({
@@ -91,6 +91,7 @@ export class Renderer {
         grunge: {value: this.resources.items.grunge},
         dpi: { value: 1 },
         ditherOffset: { value: [ 0, 0 ] },
+        blur: {value: this.resources.items.blur}
       },
 
       defines: {
@@ -102,13 +103,11 @@ export class Renderer {
       vertexShader: vs,
       fragmentShader: fs
     }
-    
+
     this.postProcessingPass = new ShaderPass(this.processingShader)
     this.postProcess.composer = new EffectComposer(this.instance, this.renderTarget)
 
     this.postProcess.composer.renderToScreen = true
-
-    console.log(this.renderTarget)
 
     this.postProcess.composer.setSize(store.width, store.height)
     this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
@@ -214,11 +213,13 @@ export class Renderer {
     // Instance
     this.instance.setSize(store.width, store.height)
     this.instance.setPixelRatio(this.config.pixelRatio)
-    
+
     
     // Post Process
-    this.postProcess.composer.setSize(store.width, store.height)
-    this.postProcess.composer.setPixelRatio(this.config.pixelRatio) 
+    if (this.postProcess) {
+      this.postProcess.composer.setSize(store.width, store.height)
+      this.postProcess.composer.setPixelRatio(this.config.pixelRatio) 
+    }
   }
 
   updateNoise(noise) {

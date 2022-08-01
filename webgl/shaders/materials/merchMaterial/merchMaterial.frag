@@ -12,11 +12,15 @@
 #include <shadowmap_pars_fragment>
 
 uniform sampler2D diffuseTex;
+uniform sampler2D noiseMap;
 uniform vec3 diffuse;
 uniform vec3 emissive;
 uniform vec3 specular;
 uniform float shininess;
 
+varying vec2 noiseUv;
+
+uniform float time;
 uniform float uAlpha;
 
 
@@ -37,6 +41,24 @@ void main() {
 
 	diffuseColor.rgb += vec3( rightLight * rimLightStrength ) * rimColor;
 
+  highp vec2 nUv = noiseUv;
+  vec3 tNoise = texture2D(noiseMap, nUv).rrr;
+  float tValue =  1. - uAlpha;
+  vec3 erosion = smoothstep(tValue - 0.2, tValue, tNoise);
+  vec3 border = smoothstep(0., .1, erosion) - smoothstep(.1, 1., erosion);
+  vec3 leadcol = vec3(1.);
+  vec3 fire = mix(leadcol, leadcol, smoothstep(0.8, 1., border)) * 5.;
+
+  diffuseColor.rgb += fire * border;
+  // TRANSITION
+  vec2 dpUV = (vUv) * 0.14; // 0.22
+  dpUV.x += step(1., mod(dpUV.y, 2.)) * 0.5;
+  dpUV = mod(dpUV, 1.);
+  float tValue2 = erosion.x;
+  float dpLimit = smoothstep(0., 1., 1. - tValue2 );
+  float dpMask = smoothstep(dpLimit, dpLimit, length(dpUV - vec2(0.1)));
+  if (dpMask < 1.) { discard; }
+
   //LIGHTS
 	float specularStrength = 1.0;
   vec3 totalEmissiveRadiance = emissive;
@@ -54,8 +76,7 @@ void main() {
   // #include <output_fragment>
   #include <normal_fragment_maps>
 
-  if(uAlpha <=0.001) discard;
-  gl_FragColor = vec4(color, uAlpha);
+  gl_FragColor = vec4(color, 1.);
 
   // #include <fog_fragment>
 

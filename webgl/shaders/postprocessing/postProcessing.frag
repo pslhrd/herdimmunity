@@ -6,15 +6,13 @@ uniform sampler2D tDiffuse;
 uniform vec4 res;
 uniform float time;
 uniform float pixelratio;
+
 uniform sampler2D noise;
 uniform sampler2D grunge;
+uniform sampler2D blur;
+
 uniform vec2 ditherOffset;
 uniform vec4 uvOverlayOffset;
-
-#define SAMPLE_AMOUNT 4.0
-int sampleCount = 5;
-float blur = 0.25; 
-float falloff = 3.0;
 
 const float barrelMax = 0.05;
 const int chromaNumIter = 8;
@@ -90,20 +88,23 @@ void main() {
 	}
   vec3 diffuse = (sumcol / sumw).rgb;      
 
+  // TEXTURE
+  vec3 grungeTex = texture2D(grunge, vUv).rgb;
+  diffuse = blendScreen(diffuse, grungeTex * 0.4); 
+
+  vec3 tBlur = texture2D(blur, vUv).rrr;
+  vec2 uv2 = vec2(vUv.x * tBlur.r * 0.2, vUv.y * tBlur.r * 0.2);
+
   // VIGNETTE
 	float radius = length( vUv * 2. - 1. );
 	diffuse = mix(diffuse, diffuse * 0.3, smoothstep(0.8, 1.8, radius) );
-
-  // TEXTURE
-  vec3 grungeTex = texture2D(grunge, vUv).rgb;
-  diffuse = blendScreen(diffuse, grungeTex * 0.3); 
-
 
 	// Dithering
 	float lum = clamp(luma(diffuse), 0., 1.);
 	vec3 dither = texture2D(noise, (pxCoords + ditherOffset) / NOISE_SIZE * pixelratio).rgb;
 	vec3 ditheredDiffuse = blendSoftLight(diffuse, dither);
 	diffuse = mix(diffuse, ditheredDiffuse, 0.85);
+  
 
 
   gl_FragColor = vec4(diffuse, 1.0);

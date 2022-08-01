@@ -24,7 +24,8 @@ export default class ProtagonistMaterial extends THREE.ShaderMaterial {
       matcap: {value: this.resources.items.matcap},
       roughness: {value: this.resources.items.roughness},
       grunge: {value: this.resources.items.grunge},
-      uAlpha: new THREE.Uniform(this.uAlpha)
+      uAlpha: new THREE.Uniform(this.uAlpha),
+      noiseMap: {value: this.resources.items.noiseMap}
     },
 
     this.vertexShader = vs;
@@ -34,7 +35,6 @@ export default class ProtagonistMaterial extends THREE.ShaderMaterial {
     this.isShaderMaterial = true;
     this.fog = true;
     this.transparent = true;
-    this.needsUpdate = true;
   }
 }
 

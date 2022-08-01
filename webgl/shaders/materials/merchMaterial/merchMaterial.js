@@ -9,15 +9,14 @@ import vs from './merchMaterial.vert';
 let instance = null;
 
 export default class MerchMaterial extends THREE.ShaderMaterial {
-  constructor() {
+  constructor(_options) {
     super();
-
+    this.uDiffuse = _options.diffuse
     this.app = new App();
     this.resources = this.app.resources;
-    this.uAlpha = 1;
+    this.uAlpha = 0;
 
-    this.resources.items.teeDiffuse.flipY = false;
-    this.resources.items.teeNormal.flipY = false;
+    this.uDiffuse.flipY = false;
 
     this.uniforms =  {
       ...THREE.UniformsUtils.merge([
@@ -28,8 +27,9 @@ export default class MerchMaterial extends THREE.ShaderMaterial {
         THREE.UniformsLib['fog'],
       ]),
       ...this.uniforms,
-      diffuseTex: {value: this.resources.items.teeDiffuse},
-      uAlpha: new THREE.Uniform(this.uAlpha)
+      diffuseTex: {value: this.uDiffuse},
+      uAlpha: new THREE.Uniform(this.uAlpha),
+      noiseMap: {value: this.resources.items.noiseMap},
     },
 
     this.normalMap = this.uniforms.normalMap.value = this.resources.items.teeNormal
@@ -48,7 +48,7 @@ export default class MerchMaterial extends THREE.ShaderMaterial {
   }
 }
 
-MerchMaterial.use = function use() {
-	instance = instance || new MerchMaterial();
-	return instance;
-};
+// MerchMaterial.use = function use() {
+// 	instance = instance || new MerchMaterial();
+// 	return instance;
+// };

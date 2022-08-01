@@ -11,33 +11,27 @@ export class Camera {
     this.config = this.app.config
     this.debug = this.app.debug
     this.time = this.app.time
-    this.mouse = this.app.mouse
+    this.mouse = this.app.mouse.scene
 
     this.params = {
       Mode: 'default',
-      Camera: {x: 0, y: 1.4, z: 5},
+      Camera: {x: 0, y: 1.4, z: 18},
       Rotation: {x:-0, y:0, z:0},
       LookAt: {x: -0, y: 1, z: 0}
     }
 
+    console.log(this.mouse)
+
     this.useMouse = true;
 
-    this.basePos = new THREE.Vector3()
-		this.baseQt = new THREE.Quaternion()
+    this.lookAt = new THREE.Vector3(0, 1.2, 0);
+    this.origin = new THREE.Vector3(0, 1.4, 5);
+    this.target = new THREE.Vector3();
+    this.targetXY = new THREE.Vector2(2.5, 1.2);
 
-		this.camTarget = null;
-		this.camTargetPos = new THREE.Vector3()
-		this.camTargetQt = new THREE.Quaternion()
-
-		this.mouseInfluence = 0.05;
-		this.mx = 0;
-		this.my = 0;
-		this.dx = 0;
-
-		this.followBarMult = 0;
-		this.offsetX = 0;
-		this.offsetY = 0;
-		this.rotZ = 0;
+    this.VecA = new THREE.Vector3(0);
+    this.VecB = new THREE.Vector2(0);
+    this.lerpSpeed = 0.01;
     
     this.setCamera()
     this.setModes()
@@ -123,6 +117,17 @@ export class Camera {
     this.instance.quaternion.copy(this.modes[this.params.Mode].instance.quaternion)
     this.instance.updateMatrixWorld()
 
+    this.VecA.lerp(this.lookAt, this.lerpSpeed)
+
+    this.currentCamera.position.lerp(this.origin, this.lerpSpeed);
+
+    this.target.x = this.origin.x + this.targetXY.x * this.mouse.x;
+    this.target.y = this.origin.y + this.targetXY.y * this.mouse.y;
+    this.target.z = this.origin.z;
+
+    // console.log(this.target)
+    this.currentCamera.position.lerp(this.target, this.lerpSpeed);
+    this.currentCamera.lookAt(this.VecA)
     // let x = clampedMap(this.currentCamera.position.x, 0, 10, -1, 1);
 
     // console.log(x)

@@ -14,6 +14,9 @@ export default class CharacterMaterial extends THREE.ShaderMaterial {
 
     this.app = new App();
     this.resources = this.app.resources;
+    this.resources.items.noiseMap.mapping = THREE.RepeatWrapping;
+    this.resources.items.noiseMap.wrapS = THREE.RepeatWrapping;
+    this.resources.items.noiseMap.wrapT = THREE.RepeatWrapping;
 
     this.uAlpha = 1;
 
@@ -24,7 +27,8 @@ export default class CharacterMaterial extends THREE.ShaderMaterial {
       ...uniforms,
       matcap: {value: this.resources.items.matcap},
       roughness: {value: this.resources.items.roughness},
-      uAlpha: new THREE.Uniform(this.uAlpha)
+      uAlpha: new THREE.Uniform(this.uAlpha),
+      noiseMap: {value: this.resources.items.noiseMap},
     },
 
     this.vertexShader = vs;

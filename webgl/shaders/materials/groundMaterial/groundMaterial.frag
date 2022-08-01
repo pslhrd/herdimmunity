@@ -65,7 +65,7 @@ void main() {
   float reflectance = pow((1.0 - theta), 5.0);
   reflectColor = mix(vec4(0), reflectColor, reflectance);
   diffuseColor.rgb = diffuseColor.rgb * ((1.0 - min(1.0, mirror)) + reflectColor.rgb * mixStrength);
-  // totalEmissiveRadiance += reflectColor.rgb * metalnessFactor;
+  totalEmissiveRadiance += reflectColor.rgb * metalnessFactor;
 
   // AMBIENT
 
@@ -76,7 +76,7 @@ void main() {
 	#include <lights_fragment_maps>
 	#include <lights_fragment_end>
 	// modulation
-	#include <aomap_fragment>
+
 	vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
 	vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
 	vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;

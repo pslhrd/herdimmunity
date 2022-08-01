@@ -40,9 +40,9 @@ class Reflector extends THREE.Mesh {
 
     const renderTarget = new THREE.WebGLRenderTarget( textureWidth, textureHeight, { samples: multisample } );
 
-    renderTarget.depthBuffer = true;
-    renderTarget.depthTexture = new THREE.DepthTexture();
-    renderTarget.depthTexture.type = THREE.UnsignedShortType;
+    // renderTarget.depthBuffer = true;
+    // renderTarget.depthTexture = new THREE.DepthTexture();
+    // renderTarget.depthTexture.type = THREE.UnsignedShortType;
 
 		const material = GroundMaterial.use()
 
@@ -51,7 +51,6 @@ class Reflector extends THREE.Mesh {
 		material.uniforms[ 'textureMatrix' ].value = textureMatrix;
     material.uniforms[ 'tDepth' ].value = renderTarget.depthTexture;
 
-    console.log(material)
     this.material = material;
 
     this.onBeforeRender = function (renderer, scene, camera ) {

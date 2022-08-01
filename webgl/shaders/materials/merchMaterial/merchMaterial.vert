@@ -1,6 +1,7 @@
 #define PHONG
 
 varying vec3 vViewPosition;
+varying vec2 noiseUv;
 
 #include <common>
 #include <uv_pars_vertex>
@@ -9,6 +10,7 @@ varying vec3 vViewPosition;
 #include <normal_pars_vertex>
 #include <shadowmap_pars_vertex>
 
+attribute vec2 uv2;
 
 void main() {
 	#include <uv_vertex>
@@ -19,6 +21,8 @@ void main() {
 
 	#include <begin_vertex>
 	#include <project_vertex>
+
+  noiseUv = uv2;
 
 	vViewPosition = - mvPosition.xyz;
 

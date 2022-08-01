@@ -4,9 +4,12 @@
 varying vec2 vUv;
 uniform float time;
 uniform float uAlpha;
+
 uniform sampler2D matcap;
 uniform sampler2D roughness;
 uniform sampler2D grunge;
+uniform sampler2D noiseMap;
+
 varying vec3 vWorldNormal;
 varying vec3 vViewDirection;
 varying vec3 vPosition;
@@ -81,14 +84,34 @@ void main() {
 
   // ROUGHNESS
   vec3 roughnessTexture = texture2D(roughness, vUv).rgb;
-  diffuse = blendSoftLight(diffuse, (roughnessTexture * 0.1));
+  diffuse = blendSoftLight(diffuse, (roughnessTexture * 0.3));
+
+  // NOISEMAP
+  vec2 nUv = vUv;
+  vec3 tNoise = texture2D(noiseMap, vUv * 2.).rrr;
+  float t =  1. - uAlpha;
+  vec3 erosion = smoothstep(t-.4, t, tNoise);
+  vec3 border = smoothstep(0., .1, erosion) - smoothstep(.1, 1., erosion);
+  vec3 leadcol = vec3(1.);
+  vec3 fire = mix(leadcol, leadcol, smoothstep(0.8, 1., border)) * 2.;
+
+  diffuse += border*fire;
+
+  // TRANSITION
+  vec2 dpUV = (vUv) * 0.14; // 0.22
+  dpUV.x += step(1., mod(dpUV.y, 2.)) * 0.5;
+  dpUV = mod(dpUV, 1.);
+  float tValue = erosion.x;
+  float dpLimit = smoothstep(0., 1., 1. - tValue );
+  float dpMask = smoothstep(dpLimit, dpLimit, length(dpUV - vec2(0.1)));
+  if (dpMask < 1.) { discard; }
 
   // GROUND FOG
   // vec3 groundFog = vec3(0., 0., 0.);
   // diffuse = mix(groundFog, diffuse.rgb, (vWorldPosition.y * 0.9));
   
   if(uAlpha <=0.001) discard;
-  gl_FragColor = vec4(diffuse, uAlpha);
+  gl_FragColor = vec4(diffuse, 1.);
 
   #include <fog_fragment>
 

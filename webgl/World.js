@@ -33,21 +33,43 @@ export class World {
   }
 
   setMaterials() {
-    this.MerchMaterial = MerchMaterial.use();
+    // this.MerchMaterial = MerchMaterial.use();
     this.CharacterMaterial = CharacterMaterial.use();
     this.ProtagonistMaterial = ProtagonistMaterial.use();
     this.TextMaterial = TextMaterial.use();;
-    this.scene.fog = new THREE.Fog(0x000000, 7, 15)
+    this.scene.fog = new THREE.Fog(0x121212, 5, 12)
   }
 
   setScene() {
     this.scene.add(this.resources.items.draco.scene)
     this.resources.items.draco.scene.traverse((element) => {
       if (element.name === 'TEE') {
-        element.material = this.MerchMaterial
+        element.material = new MerchMaterial({diffuse: this.resources.items.teeDiffuse})
         this.Teeshirt = element
-        element.material.uniforms.uAlpha.value = 0
+        element.basePosition = new THREE.Vector3()
+        element.baseRotation = new THREE.Euler()
+        element.basePosition.clone(element.position)
+        element.baseRotation.clone(element.rotation)
       }
+
+      if (element.name === 'DAD') {
+        element.material = new MerchMaterial({diffuse: this.resources.items.dad})
+        this.Dad = element
+        element.basePosition = new THREE.Vector3()
+        element.baseRotation = new THREE.Euler()
+        element.basePosition.clone(element.position)
+        element.baseRotation.clone(element.rotation)
+      }
+
+      if (element.name === 'PANTS') {
+        element.material = new MerchMaterial({diffuse: this.resources.items.pants})
+        this.Pants = element
+        element.basePosition = new THREE.Vector3()
+        element.baseRotation = new THREE.Euler()
+        element.basePosition.copy(element.position)
+        element.baseRotation.copy(element.rotation)
+      }
+
 
       if (element.name === 'GROUND') {
         // element.material = this.GroundMaterial
@@ -56,7 +78,17 @@ export class World {
 
       if (element.name === 'VIDEO') {
         const videoTexture = new THREE.VideoTexture(this.video)
-        element.material = new THREE.MeshBasicMaterial( {map:videoTexture, transparent: true} );
+        element.material = new THREE.MeshBasicMaterial({map:videoTexture, transparent: true});
+        let material = element.material
+        material.onBeforeCompile = (shader) => {
+          shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <specularmap_fragment>',
+            `
+            #include <specularmap_fragment>
+            if(opacity <= 0.001) discard;
+            `
+         )
+        }
         element.material.needsUpdate = true;
         this.video3D = element
       }
@@ -79,12 +111,11 @@ export class World {
     })
     
     const directional = new THREE.DirectionalLight(0xffffff, 1)
-    directional.position.set( 10, 5, 10)
     const helper = new THREE.DirectionalLightHelper( directional, 5 );
-    const ambientlight = new THREE.AmbientLight(0xffffff, 1)
-    this.scene.add(ambientlight)
+    const ambientlight = new THREE.AmbientLight(0xffffff, 0.2)
+    const hemi = new THREE.HemisphereLight( 0xffffff, 0x080820, 1 );
+    this.scene.add(ambientlight, directional)
 
-    console.log(this.Ground)
     const geometry = new THREE.PlaneBufferGeometry(20, 20)
     const mirror = new Reflector(geometry, {
       clipBias: 0.003,
@@ -99,6 +130,8 @@ export class World {
     mirror.material.alpha = 1;
   
     this.scene.add(mirror);
+
+    store.worldSet = true;
   }
 
   setVideoPlayer() {

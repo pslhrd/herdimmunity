@@ -54,7 +54,7 @@ export class App {
 
   setConfig() {
     this.config = {}
-    this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
+    this.config.pixelRatio = 1
     this.config.debug = window.location.hash === '#debug'
   }
 
@@ -102,7 +102,6 @@ export class App {
   }
 
   setTime() {
-    console.log('test')
     this.time = new Time()
   }
 
@@ -122,7 +121,12 @@ export class App {
 
   resize() {
     this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
-    uniforms.res.value.set(store.width, store.height, 1 / store.width, 1 / store.height)
+
+    uniforms.res.value.x = store.width
+    uniforms.res.value.y = store.height
+    uniforms.res.value.z = 1 / store.width
+    uniforms.res.value.w = 1 / store.height
+    
     if(this.camera) this.camera.resize()
     if(this.world) this.world.resize()
     if(this.renderer) this.renderer.resize()

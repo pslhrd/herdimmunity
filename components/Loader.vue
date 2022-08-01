@@ -21,7 +21,7 @@
   width: 100%;
   height: 100%;
   position: fixed;
-  background-color: #20201D;
+  background-color: black;
   z-index: 25;
 
   display: flex;
@@ -32,6 +32,8 @@
   font-size: 50px;
 
   svg {
+    width: 180px;
+    height: 180px;
     animation: blurred 2s infinite $inOut;
   }
 
