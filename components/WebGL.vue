@@ -19,7 +19,7 @@ const video = ref(null)
 const canvas = ref(null)
 
 onMounted(() => {
-  useResize(canvas)
+  useResize(canvas.value)
   const app = new App({targetElement: container.value, videoElement: video.value, targetCanvas: canvas.value})
 })
 </script>
