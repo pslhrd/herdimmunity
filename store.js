@@ -4,6 +4,9 @@ export const store = reactive({
   width: 0,
   height: 0,
 
+  canvasWidth: 0,
+  canvasHeight: 0,
+
   mouseY: 0,
   mouseX: 0,
 

@@ -26,6 +26,8 @@ export class Renderer {
     this.debug = this.app.debug
     this.time = this.app.time
 
+    this.canvas = _options.canvas
+
     this.usePostProcess = true
     this.setInstance()
     
@@ -42,6 +44,7 @@ export class Renderer {
 
     // Renderer
     this.instance = new THREE.WebGLRenderer({
+      // canvas: this.canvas,
       alpha: false,
       antialias: false
     })

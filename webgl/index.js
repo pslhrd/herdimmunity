@@ -26,6 +26,7 @@ export class App {
 
     this.targetElement = _options.targetElement
     this.video = _options.videoElement
+    this.canvas = _options.targetCanvas
 
     if(!this.targetElement) {
       console.warn('Missing \'targetElement\' property')
@@ -85,7 +86,7 @@ export class App {
   setRenderer() {
     uniforms.res.value.set(store.width, store.height, 1 / store.width, 1 / store.height)
     uniforms.pixelratio.value = this.config.pixelRatio
-    this.renderer = new Renderer({rendererInstance: this.rendererInstance})
+    this.renderer = new Renderer({renderInstance: this.renderInstance})
     this.targetElement.appendChild(this.renderer.instance.domElement)
   }
 

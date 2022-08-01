@@ -1,5 +1,7 @@
 <template>
-  <div class="webgl" ref="container"></div>
+  <div class="webgl" ref="container">
+    <canvas class="webgl-canvas" ref="canvas"></canvas>
+  </div>
 
   <video class="video" ref="video" muted loop crossOrigin="anonymous" playsinline style="display:none">
     <source src="/textures/video.mp4">
@@ -14,10 +16,11 @@ import { store } from '~/store'
 
 const container = ref(null)
 const video = ref(null)
-useResize()
+const canvas = ref(null)
 
 onMounted(() => {
-  const app = new App({targetElement: container.value, videoElement: video.value})
+  useResize(canvas)
+  const app = new App({targetElement: container.value, videoElement: video.value, targetCanvas: canvas.value})
 })
 </script>
 
@@ -27,5 +30,10 @@ onMounted(() => {
   position: fixed;
   width: 100vw;
   height: 100vh;
+
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>
