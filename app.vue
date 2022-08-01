@@ -22,12 +22,12 @@
     min-height: 100vh; 
     overflow: hidden;
     user-select: none;
-    background-color: black;
+    background-color: #121212;
   }
 
   main {
     position: fixed;
-    background-color: black;
+    background-color: #121212;
     width: 100%;
     min-height: 100vh;
   }
