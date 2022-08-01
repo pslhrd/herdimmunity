@@ -86,7 +86,7 @@ export class App {
   setRenderer() {
     uniforms.res.value.set(store.width, store.height, 1 / store.width, 1 / store.height)
     uniforms.pixelratio.value = this.config.pixelRatio
-    this.renderer = new Renderer({renderInstance: this.renderInstance})
+    this.renderer = new Renderer({rendererInstance: this.renderInstance})
     this.targetElement.appendChild(this.renderer.instance.domElement)
   }
 
