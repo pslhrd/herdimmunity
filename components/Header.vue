@@ -25,8 +25,6 @@
   <transition name="header">
     <header v-if="store.assetsLoaded">
       <span @click="store.currentState = 1">HERD IMMUNITY</span>
-      <span> {{ store.width }}</span>
-      <span> {{ store.height }}</span>
     </header>
   </transition>
 </template>
