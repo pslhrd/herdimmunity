@@ -7,8 +7,9 @@ export function useResize(canvas) {
     store.width = window.innerWidth
     store.height = window.innerHeight
 
-    store.canvasHeight = canvas.innerHeight
-    store.canvasWidth = canvas.innerWidth
+    store.canvasHeight = canvas.offsetHeight
+    store.canvasWidth = canvas.offsetWidth
+
   }
 
   update()
