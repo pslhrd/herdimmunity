@@ -16,6 +16,7 @@ export const Assets = [
     { name: 'mediumNoise', source: '/textures/medium_noise.jpg', type: 'texture'},
     { name: 'blur', source: '/textures/blur.jpg', type: 'texture'},
     { name: 'pants', source: '/textures/pants.jpg', type: 'texture'},
-    { name: 'dad', source: '/textures/dad.png', type: 'texture'}
+    { name: 'dad', source: '/textures/dad.png', type: 'texture'},
+    { name: 'sleeve', source: '/textures/sleeve.jpg', type: 'texture'}
 
   ]

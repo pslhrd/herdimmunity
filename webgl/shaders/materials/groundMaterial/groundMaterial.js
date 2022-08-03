@@ -47,7 +47,7 @@ export default class GroundMaterial extends THREE.ShaderMaterial {
     this.roughnessMap = this.uniforms.roughnessMap.value = this.resources.items.orm
 
     this.normalMap = this.uniforms.normalMap.value = this.resources.items.normalMap
-    this.normalScale = this.uniforms.normalScale.value = new THREE.Vector2(-3,-3);
+    this.normalScale = this.uniforms.normalScale.value = new THREE.Vector2(1,1);
 
     this.blending = THREE.CustomBlending, // comment this out to see what happens when NormalBlending is used
 

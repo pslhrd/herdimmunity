@@ -34,6 +34,7 @@
             <div class="button" @click="store.currentMerch = 1" :class="{active: store.currentMerch === 1}">1</div>
             <div class="button" @click="store.currentMerch = 2" :class="{active: store.currentMerch === 2}">2</div>
             <div class="button" @click="store.currentMerch = 3" :class="{active: store.currentMerch === 3}">3</div>
+            <div class="button" @click="store.currentMerch = 4" :class="{active: store.currentMerch === 4}">4</div>
           </div>
         </div>
       </div>

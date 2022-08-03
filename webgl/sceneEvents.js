@@ -83,6 +83,7 @@ export class sceneEvents {
     let merchItems = [
       this.world.Teeshirt,
       this.world.Dad,
+      this.world.Sleeve,
       this.world.Pants
     ]
     let newV = value - 1
@@ -164,6 +165,7 @@ export class sceneEvents {
     let merchItems = [
       this.world.Teeshirt,
       this.world.Dad,
+      this.world.Sleeve,
       this.world.Pants
     ]
     let current = store.currentMerch - 1
@@ -175,6 +177,7 @@ export class sceneEvents {
     let merchItems = [
       this.world.Teeshirt,
       this.world.Dad,
+      this.world.Sleeve,
       this.world.Pants
     ]
     let current = store.currentMerch - 1
@@ -183,13 +186,13 @@ export class sceneEvents {
   }
 
   enterVideo() {
-    gsap.killTweensOf(this.world.video3D.material)
+    gsap.killTweensOf(this.world.video3D.material.uniforms.uAlpha)
     this.video.play()
-    gsap.to(this.world.video3D.material, {opacity: 1, duration:1, ease:'power2.out'})
+    gsap.to(this.world.video3D.material.uniforms.uAlpha, {value: 1, duration:3, ease:'power2.out'})
   }
   leaveVideo() {
-    gsap.killTweensOf(this.world.video3D.material)
-    gsap.to(this.world.video3D.material, {opacity: 0, duration:0.5, ease:'power2.out'})
+    gsap.killTweensOf(this.world.video3D.material.uniforms.uAlpha)
+    gsap.to(this.world.video3D.material.uniforms.uAlpha, {value: 0, duration:3, ease:'power2.out'})
     this.video.pause()
   }
 

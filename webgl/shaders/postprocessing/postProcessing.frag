@@ -36,6 +36,14 @@ float luma(vec3 color) {
   return dot(color, vec3(0.299, 0.587, 0.114));
 }
 
+vec3 screen (vec3 cb, vec3 cs) {
+    return cb + cs - (cb * cs);
+}
+vec3 colorDodge (vec3 cb, vec3 cs) {
+    return mix(
+    min(vec3(1.0), cb / (1.0 - cs)), vec3(1.0), step(vec3(1.0), cs)
+    );
+}
 
 float rand(vec2 uv, float t) {
     return fract(sin(dot(uv, vec2(1225.6548, 321.8942))) * 4251.4865 + t);
@@ -105,7 +113,8 @@ void main() {
 	vec3 ditheredDiffuse = blendSoftLight(diffuse, dither);
 	diffuse = mix(diffuse, ditheredDiffuse, 0.85);
   
+  vec3 blendColor = vec3(0.106,0.125,0.153);
 
-
+  diffuse = mix(diffuse, screen(colorDodge(diffuse, blendColor), blendColor), 0.25);
   gl_FragColor = vec4(diffuse, 1.0);
 }

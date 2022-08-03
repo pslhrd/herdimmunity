@@ -9,6 +9,7 @@ import ProtagonistMaterial from '~/webgl/shaders/materials/protagonistMaterial/p
 import TextMaterial from '~/webgl/shaders/materials/textMaterial/textMaterial'
 import CharacterMaterial from '~/webgl/shaders/materials/characterMaterial/characterMaterial'
 import GroundMaterial from '~/webgl/shaders/materials/groundMaterial/groundMaterial'
+import VideoMaterial from '~/webgl/shaders/materials/videoMaterial/videoMaterial'
 
 import { Reflector } from '~/webgl/components/Reflector'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
@@ -36,8 +37,9 @@ export class World {
     // this.MerchMaterial = MerchMaterial.use();
     this.CharacterMaterial = CharacterMaterial.use();
     this.ProtagonistMaterial = ProtagonistMaterial.use();
-    this.TextMaterial = TextMaterial.use();;
-    this.scene.fog = new THREE.Fog(0x121212, 5, 12)
+    this.TextMaterial = TextMaterial.use();
+    // this.VideoMaterial = VideoMaterial.use();
+    this.scene.fog = new THREE.Fog(0x121212, 7, 12);
   }
 
   setScene() {
@@ -70,6 +72,15 @@ export class World {
         element.baseRotation.copy(element.rotation)
       }
 
+      if (element.name === 'SLEEVE') {
+        element.material = new MerchMaterial({diffuse: this.resources.items.sleeve})
+        this.Sleeve = element
+        element.basePosition = new THREE.Vector3()
+        element.baseRotation = new THREE.Euler()
+        element.basePosition.copy(element.position)
+        element.baseRotation.copy(element.rotation)
+      }
+
 
       if (element.name === 'GROUND') {
         // element.material = this.GroundMaterial
@@ -78,17 +89,9 @@ export class World {
 
       if (element.name === 'VIDEO') {
         const videoTexture = new THREE.VideoTexture(this.video)
-        element.material = new THREE.MeshBasicMaterial({map:videoTexture, transparent: true});
+        element.material = new VideoMaterial({map: videoTexture});
+        // element.material = new THREE.MeshBasicMaterial({map:videoTexture, transparent: true});
         let material = element.material
-        material.onBeforeCompile = (shader) => {
-          shader.fragmentShader = shader.fragmentShader.replace(
-            '#include <specularmap_fragment>',
-            `
-            #include <specularmap_fragment>
-            if(opacity <= 0.001) discard;
-            `
-         )
-        }
         element.material.needsUpdate = true;
         this.video3D = element
       }

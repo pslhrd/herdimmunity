@@ -30,6 +30,8 @@ varying vec3 vViewPosition;
 #include <logdepthbuf_pars_fragment>
 #include <clipping_planes_pars_fragment>
 
+float Pi = 6.28318530718;
+
 uniform float mirror;
 uniform float mixStrength;
 uniform sampler2D tDiffuse;
@@ -55,17 +57,17 @@ void main() {
   vec4 normalColor = texture2D(normalMap, vUv * normalScale);
   vec3 reflectNormal = normalize(vec3(normalColor.r * 2.0 - 1.0, normalColor.b, normalColor.g * 2.0 - 1.0));
   vec3 reflectCoord = vCoord.xyz / vCoord.w;
-  vec2 reflectUv = reflectCoord.xy + reflectCoord.z * reflectNormal.xz * 0.05;
+  vec2 reflectUv = reflectCoord.xy + reflectCoord.z * reflectNormal.xz * 0.01;
   vec4 reflectColor = texture2D(tDiffuse, reflectUv);
-
 
   // Fresnel term
   vec3 toEye = normalize(vToEye);
   float theta = max(dot(toEye, normal), 0.0);
   float reflectance = pow((1.0 - theta), 5.0);
   reflectColor = mix(vec4(0), reflectColor, reflectance);
+
   diffuseColor.rgb = diffuseColor.rgb * ((1.0 - min(1.0, mirror)) + reflectColor.rgb * mixStrength);
-  totalEmissiveRadiance += reflectColor.rgb * metalnessFactor;
+  totalEmissiveRadiance += reflectColor.rgb * metalnessFactor * 2.;
 
   // AMBIENT
 

@@ -129,30 +129,7 @@ export class Camera {
     // console.log(this.target)
     this.currentCamera.position.lerp(this.target, this.lerpSpeed);
     this.currentCamera.lookAt(this.VecA)
-    // let x = clampedMap(this.currentCamera.position.x, 0, 10, -1, 1);
-
-    // console.log(x)
-		// const txEase = this.useMouse ? 0.07 : 0.14;
-		// this.offsetX = damp(this.offsetX, x * 0.6, txEase, dt);
-		// this.currentCamera.translateX(this.offsetX);
-
-    // // MOUSEMOVE
-		// const mx = this.useMouse ? this.mouse.scene.x * this.mouseInfluence : 0;
-		// const my = this.useMouse ? this.mouse.scene.y * this.mouseInfluence : 0;
-
-
-    // let pmx = this.mx;
-    // this.mx = dampPrecise(this.mx, mx * 0.4, 0.08, dt, 0.01);
-    // this.my = dampPrecise(this.my, my * 0.2, 0.08, dt, 0.01);
-
-		// if (this.mx !== 0 && this.my !== 0) {
-		// 	this.currentCamera.translateX(this.mx);
-		// 	this.currentCamera.rotateY(this.mx * 0.1);
-		// 	this.currentCamera.rotateX(this.my * -0.1);
-		// 	this.currentCamera.translateY(this.my);
-		// 	this.dx = damp(this.dx, (this.mx - pmx) * 0.8, 0.1, dt);
-		// 	this.currentCamera.rotateZ(this.dx);
-		// }
+    let x = clampedMap(this.currentCamera.position.x, 0, 10, -1, 1);
   }
 
   destroy() {
